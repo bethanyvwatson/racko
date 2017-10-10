@@ -1,0 +1,9 @@
+intro:
+  greeting: 
+    "Hey this is Racko!\n"
+  ask_rules:
+    "Do you want to hear the rules?\n"
+no_comprende:
+  "Sorry, I didn't understand that! Please respond yes or no.\n"
+rules:
+  "There are no rules!\n"
