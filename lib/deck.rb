@@ -5,6 +5,10 @@ class Deck
     @cards = []
   end
 
+  def is_empty?
+    @cards.length < 1
+  end
+
   def add_to_deck(card)
     @cards.unshift(card)
   end
