@@ -9,8 +9,18 @@ intro:
     "Player 1, please enter your name now: "
   player2:
     "Player 2, go ahead and enter your name too: "
-
+game_turn:
+  draw_card:
+    "Draw a card! Type 'new card' to draw a new card from the draw pile, or 'discarded card' to take the top card on the discard pile.\n"
+  is_player_ready:
+    "Ready to clear the screen and display your rack?\n"
+  use_instructions:
+    "If you want to exchange your new card with one in your rack, enter the letter which corresponds to the card you want to replace. To discard your newest card, enter 'discard'."
+  confirm:
+    "Is this correct?"
 no_comprende:
   "Sorry, I didn't understand that! Please respond yes or no.\n"
 rules:
   "There are no rules!\n"
+game_over:
+  "Thanks for playing Racko!"

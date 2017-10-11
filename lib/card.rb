@@ -6,6 +6,6 @@ class Card
   end
 
   def show
-    print @number
+    "|*#{@number.to_s.length < 2 ? '0'+ @number.to_s : @number.to_s}*|"
   end
 end
