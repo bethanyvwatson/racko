@@ -1,8 +1,15 @@
 intro:
-  greeting: 
-    "Hey this is Racko!\n"
   ask_rules:
     "Do you want to hear the rules?\n"
+  get_player_info:
+    "Before we get started, what are your names?\n"
+  greeting: 
+    "Hey this is Racko!\n"
+  player1:
+    "Player 1, please enter your name now: "
+  player2:
+    "Player 2, go ahead and enter your name too: "
+
 no_comprende:
   "Sorry, I didn't understand that! Please respond yes or no.\n"
 rules:
