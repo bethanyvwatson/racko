@@ -8,6 +8,7 @@ class PlayRacko
   require_relative 'lib/card.rb'
 
   TEXT = YAML.load_file('text.yml')
+  MAX_CARDS = 9
 
   def play
     # Greeting
@@ -23,7 +24,7 @@ class PlayRacko
     # Shuffle Cards
     init_decks
     # Deal Cards
-    # Init Discard Pile
+    deal_cards
 
     # Begin Turns
     # Select a Deck to Draw From
@@ -39,11 +40,27 @@ class PlayRacko
 
   private
 
+  def deal_cards
+    #each player gets 9 cards. They are ordered in a rack. Cards are taken FROM the draw pile.
+    MAX_CARDS.times do |d|
+      @player1.rack.add_card(@draw_pile.draw_card)
+      @player2.rack.add_card(@draw_pile.draw_card)
+    end
+
+    @discard_pile.add_to_deck(@draw_pile.draw_card)
+
+    puts 'LETS SEE WHAT WE HAVE'
+    @player1.rack.print_cards
+    @player2.rack.print_cards
+    @discard_pile.print_cards
+  end
+
   def init_decks
     @draw_pile = RackoDeck.new
     @discard_pile = Deck.new
 
     print TEXT['time_to_shuffle']
+    @draw_pile.print_cards
     @draw_pile.shuffle
 
     keep_shuffling = true
@@ -52,12 +69,15 @@ class PlayRacko
       response = gets.chomp.downcase
       if ['yes'].include? response.downcase
         @draw_pile.shuffle
+        @draw_pile.print_cards  
       elsif ['no'].include? response
         keep_shuffling = false
       else 
         print TEXT['no_comprende']
       end 
     end
+    puts 'DONE'
+    @draw_pile.print_cards
   end
 
   def init_players
