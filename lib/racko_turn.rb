@@ -21,6 +21,8 @@ class RackoTurn < GameTurn
     show_state
 
     use_card
+
+    finish_turn
   end
 
   private
@@ -44,14 +46,14 @@ class RackoTurn < GameTurn
     end
   end
 
-  # ensure a safe handoff between the players.
+  # ensure a safe handoff between the players
   # don't let the players see eachother's racks!
   def ready_player
     waiting_for_next_player = true
     puts "It's #{@current_player.name}'s turn!"
 
     while waiting_for_next_player
-      print TEXT['game_turn']['is_player_ready']
+      print "Are you #{@current_player.name}?"
       response = gets.chomp
       if ['yes'].include? response
         waiting_for_next_player = false
@@ -60,6 +62,26 @@ class RackoTurn < GameTurn
         print TEXT['no_comprende']
       end
     end 
+
+    system('clear')
+  end
+
+  # Give the player time to review their rack, then clear the screen
+  def finish_turn
+    waiting_to_confirm_done = true
+
+    while waiting_to_confirm_done
+      puts "Are you ready to finish your turn?"
+      response = gets.chomp
+      if ['yes'].include? response
+        waiting_to_confirm_done = false
+      elsif ['no'].include? response
+      else
+        print TEXT['no_comprende']
+      end
+    end 
+
+    system('clear')
   end
 
   def reset_turn

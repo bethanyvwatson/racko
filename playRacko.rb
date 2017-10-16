@@ -65,12 +65,9 @@ class PlayRacko
     @discard_pile = Deck.new
 
     print TEXT['time_to_shuffle']
-    @draw_pile.print_cards
     @draw_pile.shuffle
 
     shuffle_decks
-    puts 'DONE'
-    @draw_pile.print_cards
   end
 
   # get the names of each player
@@ -139,7 +136,6 @@ class PlayRacko
       response = gets.chomp.downcase
       if ['yes'].include? response.downcase
         @draw_pile.shuffle
-        @draw_pile.print_cards  
       elsif ['no'].include? response
         keep_shuffling = false
       else 
