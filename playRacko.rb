@@ -15,11 +15,8 @@ class PlayRacko
   def play    
     greeting
     go_over_the_rules
-    
     setup_game
-
     run_game
-
     end_game
   end
 
@@ -28,21 +25,15 @@ class PlayRacko
   def check_for_winner
     @winning_player = @current_player if @current_player.rack.is_ordered?
   end
-
+  # each player gets 9 cards. 
+  # They are ordered in a rack. Cards are taken FROM the draw pile.
   def deal_cards
-    #each player gets 9 cards. They are ordered in a rack. Cards are taken FROM the draw pile.
     MAX_CARDS.times do |d|
       @player1.rack.add_card(@draw_pile.draw_card)
       @player2.rack.add_card(@draw_pile.draw_card)
     end
 
     @discard_pile.add_to_deck(@draw_pile.draw_card)
-
-    puts 'LETS SEE WHAT WE HAVE'
-    @player1.rack.print_cards
-    @player2.rack.print_cards
-    @discard_pile.print_cards
-    puts ''
   end
 
   def end_game
@@ -50,6 +41,7 @@ class PlayRacko
     puts TEXT['game_over']
   end
 
+  # player chooses if they want to see the rules
   def go_over_the_rules
     wants_rules = ''
     while !['yes', 'no'].include? wants_rules.downcase
@@ -81,6 +73,8 @@ class PlayRacko
     @draw_pile.print_cards
   end
 
+  # get the names of each player
+  # initialize player objects
   def init_players
     player1_name = ''
     player2_name = ''
@@ -110,12 +104,13 @@ class PlayRacko
 
   def run_game
     while @winning_player.nil?
+      switch_players
+
       validate_draw_pile
 
       RackoTurn.new(@current_player, @draw_pile, @discard_pile).take_turn
 
       check_for_winner
-      switch_players
     end
   end 
 
@@ -136,6 +131,7 @@ class PlayRacko
     puts "Newest Card: #{@selected_card.show} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
   end
 
+  # allow the players to shuffle the deck as many times as they want
   def shuffle_decks
     keep_shuffling = true
     while keep_shuffling
@@ -156,6 +152,8 @@ class PlayRacko
     @current_player = @current_player == @player1 ? @player2 : @player1
   end
 
+  # ensure there are cards in the draw pile
+  # if not, reshuffle the discard pile and make that the new draw pile
   def validate_draw_pile
     if @draw_pile.is_empty?
 

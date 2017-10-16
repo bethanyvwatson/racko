@@ -11,6 +11,21 @@ class RackoTurn < GameTurn
     @drew_from_discard = false
   end
 
+  def take_turn
+    reset_turn
+    ready_player
+ 
+    show_state
+ 
+    draw_card
+    show_state
+
+    use_card
+  end
+
+  private
+
+  # Player picks which pile they want to pick a card from: draw pile, or discard pile
   def draw_card
     waiting_to_pick_pile = true
     while waiting_to_pick_pile
@@ -29,14 +44,17 @@ class RackoTurn < GameTurn
     end
   end
 
+  # ensure a safe handoff between the players.
+  # don't let the players see eachother's racks!
   def ready_player
-    waiting = true
+    waiting_for_next_player = true
     puts "It's #{@current_player.name}'s turn!"
-    while waiting
+
+    while waiting_for_next_player
       print TEXT['game_turn']['is_player_ready']
       response = gets.chomp
       if ['yes'].include? response
-        waiting = false
+        waiting_for_next_player = false
       elsif ['no'].include? response
       else
         print TEXT['no_comprende']
@@ -50,8 +68,6 @@ class RackoTurn < GameTurn
   end
 
   def show_state
-    system("clear")
-
     puts <<-TABLE
     #{@discard_pile.cards.any? ? @discard_pile.cards.first.show : 'N/A'}          |*?*|
     TABLE
@@ -60,23 +76,15 @@ class RackoTurn < GameTurn
     puts "Newest Card: #{@selected_card.show} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
   end
 
-  def take_turn
-    reset_turn
-    ready_player
- 
-    show_state
- 
-    draw_card
-    show_state
-
-    use_card
-  end
-
+  # Player has drawn their card. 
+  # Now they decide where to put it in their rack.
+  # They can discard it if the card was not drawn from the discard pile.
   def use_card
-    waiting_to_confirm = true
-    waiting_to_use = true
-    while waiting_to_confirm
-      while waiting_to_use
+    waiting_to_confirm_placement = true
+    waiting_to_use_card = true
+
+    while waiting_to_confirm_placement
+      while waiting_to_use_card
         @card_to_replace = nil
         @card_to_discard = nil
 
@@ -84,16 +92,26 @@ class RackoTurn < GameTurn
 
         @placement_response = gets.chomp
 
+        # If player chooses a location in their rack
+        # Get ready to exchange those cards
         if Rack::RACK_MARKERS.include? @placement_response.upcase
           @card_to_replace = @current_player.rack.get_card(@placement_response)
           @card_to_discard = @card_to_replace
 
-          waiting_to_use = false
-        elsif ['discard'].include? @placement_response
-          @card_to_replace = nil
-          @card_to_discard = @selected_card
+          waiting_to_use_card = false
 
-          waiting_to_use = false
+        # If player chooses to discard their card
+        # get ready to discard their card
+        # Disallow discard if card was drawn from the discard pile
+        elsif ['discard'].include? @placement_response
+          if @drew_from_discard
+            puts TEXT['game_turn']['drew_from_discard_cannot_discard']
+          else
+            @card_to_replace = nil
+            @card_to_discard = @selected_card
+
+            waiting_to_use_card = false
+          end
         else
           puts TEXT['no_comprende']
         end
@@ -108,16 +126,21 @@ class RackoTurn < GameTurn
       end
 
       puts "You are discarding #{@card_to_discard.show}."
-      puts TEXT['game_turn']['confirm']
 
+      puts TEXT['game_turn']['confirm']
       confirm_response = gets.chomp
 
+      # If player confirms their decision
+      # persist their decision
       if ['yes'].include? confirm_response
         @current_player.rack.replace_card(@placement_response, @selected_card) if @card_to_replace
         @discard_pile.add_to_deck(@card_to_discard)
-        waiting_to_confirm = false
+        waiting_to_confirm_placement = false
+      
+      # If player changes their mind
+      # allow them to choose how to use their card again 
       elsif ['no'].include? confirm_response
-        waiting_to_use = true
+        waiting_to_use_card = true
       else
         puts TEXT['no_comprende']
       end
