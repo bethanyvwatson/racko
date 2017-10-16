@@ -47,8 +47,15 @@ class PlayRacko
     while !['yes', 'no'].include? wants_rules.downcase
       print TEXT['intro']['ask_rules']
       wants_rules = gets.chomp.downcase
+      system('clear')
       if ['yes'].include? wants_rules
         print TEXT['rules']
+        player_still_reading = true
+        while player_still_reading
+          puts 'Are you ready to play?'
+          player_ready = gets.chomp.downcase
+          player_still_reading = false if ['yes'].include?(player_ready)
+        end
       elsif wants_rules == 'no'
       else 
         print TEXT['no_comprende']
@@ -64,6 +71,7 @@ class PlayRacko
     @draw_pile = RackoDeck.new
     @discard_pile = Deck.new
 
+    system('clear')
     print TEXT['time_to_shuffle']
     @draw_pile.shuffle
 
@@ -73,6 +81,7 @@ class PlayRacko
   # get the names of each player
   # initialize player objects
   def init_players
+    system('clear')
     player1_name = ''
     player2_name = ''
 
@@ -83,12 +92,16 @@ class PlayRacko
       player1_name = gets.chomp
     end
 
+    system('clear')
+
     print "Nice to meet you, #{player1_name}.\n"
 
     while player2_name.empty?
       print TEXT['intro']['player2']
       player2_name = gets.chomp
     end
+
+    system('clear')
 
     print "Ok, #{player2_name}! Got it.\n"
 
@@ -118,7 +131,7 @@ class PlayRacko
   end
 
   def show_state
-    system("clear")
+    system('clear')
 
     puts <<-TABLE
     #{@discard_pile.cards.any? ? @discard_pile.cards.first.show : 'N/A'}          |*?*|
@@ -132,6 +145,7 @@ class PlayRacko
   def shuffle_decks
     keep_shuffling = true
     while keep_shuffling
+      system('clear')
       puts ['Do you want to', 'Should we', 'Shall we'].sample + [' keep shuffling', ' shuffle'].sample + [' the cards',''].sample + [' again?', ' some more?', '?'].sample
       response = gets.chomp.downcase
       if ['yes'].include? response.downcase
@@ -153,6 +167,7 @@ class PlayRacko
   def validate_draw_pile
     if @draw_pile.is_empty?
 
+      system('clear')
       puts TEXT['game_turn']['reshuffle']
       @draw_pile = @discard_pile
       @discard_pile = Deck.new

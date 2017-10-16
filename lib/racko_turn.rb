@@ -22,6 +22,8 @@ class RackoTurn < GameTurn
 
     use_card
 
+    show_state
+
     finish_turn
   end
 
@@ -33,9 +35,16 @@ class RackoTurn < GameTurn
     while waiting_to_pick_pile
       puts TEXT['game_turn']['draw_card']
       response = gets.chomp
+
+      # If player picks the draw pile
+      # draw the top card from that pile
       if ['new card'].include? response
         @selected_card = @draw_pile.draw_card
         waiting_to_pick_pile = false
+
+      # If player picks from discard pile
+      # draw top card from that pile
+      # player cannot discard this card
       elsif ['discarded card'].include? response
         @selected_card = @discard_pile.draw_card
         @drew_from_discard = true
@@ -49,6 +58,8 @@ class RackoTurn < GameTurn
   # ensure a safe handoff between the players
   # don't let the players see eachother's racks!
   def ready_player
+    system('clear')
+
     waiting_for_next_player = true
     puts "It's #{@current_player.name}'s turn!"
 
@@ -90,6 +101,8 @@ class RackoTurn < GameTurn
   end
 
   def show_state
+    system('clear')
+
     puts <<-TABLE
     #{@discard_pile.cards.any? ? @discard_pile.cards.first.show : 'N/A'}          |*?*|
     TABLE
