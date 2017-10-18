@@ -8,9 +8,14 @@ class PlayRacko
   require_relative 'lib/card.rb'
   require_relative 'lib/game_turn.rb'
   require_relative 'lib/racko_turn.rb'
+  require_relative 'lib/player_manager.rb'
 
   TEXT = YAML.load_file('text.yml')
   MAX_CARDS = 9
+
+  def initialize
+    @player_manager = PlayerManager.new
+  end
 
   def play    
     greeting
@@ -23,21 +28,21 @@ class PlayRacko
   private
 
   def check_for_winner
-    @winning_player = @current_player if @current_player.rack.is_ordered?
+    @winning_player = @player_manager.current_player if @player_manager.current_player.rack.is_ordered?
   end
+  
   # each player gets 9 cards. 
   # They are ordered in a rack. Cards are taken FROM the draw pile.
   def deal_cards
     MAX_CARDS.times do |d|
-      @player1.rack.add_card(@draw_pile.draw_card)
-      @player2.rack.add_card(@draw_pile.draw_card)
+      @player_manager.players.each { |player| player.rack.add_card(@draw_pile.draw_card) }
     end
 
     @discard_pile.add_to_deck(@draw_pile.draw_card)
   end
 
   def end_game
-    puts "#{@current_player.name} wins!!!"
+    puts "#{@player_manager.current_player.name} wins!!!"
     puts TEXT['game_over']
   end
 
@@ -78,47 +83,18 @@ class PlayRacko
     shuffle_decks
   end
 
-  # get the names of each player
-  # initialize player objects
   def init_players
-    system('clear')
-    player1_name = ''
-    player2_name = ''
-
-    print TEXT['intro']['get_player_info']
-    
-    while player1_name.empty?
-      print TEXT['intro']['player1']
-      player1_name = gets.chomp
-    end
-
-    system('clear')
-
-    print "Nice to meet you, #{player1_name}.\n"
-
-    while player2_name.empty?
-      print TEXT['intro']['player2']
-      player2_name = gets.chomp
-    end
-
-    system('clear')
-
-    print "Ok, #{player2_name}! Got it.\n"
-
-    @player1 = Player.new(player1_name, Rack.new)
-    @player2 = Player.new(player2_name, Rack.new)
-
-    @current_player = @player1
+    @player_manager.init_players
     @winning_player = nil
   end
 
   def run_game
     while @winning_player.nil?
-      switch_players
+      @player_manager.switch_players
 
       validate_draw_pile
 
-      RackoTurn.new(@current_player, @draw_pile, @discard_pile).take_turn
+      RackoTurn.new(@player_manager.current_player, @draw_pile, @discard_pile).take_turn
 
       check_for_winner
     end
@@ -136,7 +112,7 @@ class PlayRacko
     puts <<-TABLE
     #{@discard_pile.cards.any? ? @discard_pile.cards.first.show : 'N/A'}          |*?*|
     TABLE
-    print @current_player.printable_player
+    print @player_manager.current_player.printable_player
 
     puts "Newest Card: #{@selected_card.show} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
   end
@@ -158,10 +134,6 @@ class PlayRacko
     end
   end
 
-  def switch_players
-    @current_player = @current_player == @player1 ? @player2 : @player1
-  end
-
   # ensure there are cards in the draw pile
   # if not, reshuffle the discard pile and make that the new draw pile
   def validate_draw_pile
@@ -179,4 +151,4 @@ class PlayRacko
   end
 
   PlayRacko.new.play
-end 
+end
