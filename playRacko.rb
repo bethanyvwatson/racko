@@ -6,6 +6,7 @@ class PlayRacko
   require_relative 'lib/racko_turn.rb'
   require_relative 'lib/player_manager.rb'
   require_relative 'lib/decks_manager.rb'
+  require_relative 'lib/rules_manager.rb'
 
   TEXT = YAML.load_file('text.yml')
   MAX_CARDS = 9
@@ -13,11 +14,11 @@ class PlayRacko
   def initialize
     @player_manager = PlayerManager.new
     @decks_manager = DecksManager.new
+    @rules_manager = RulesManager.new
   end
 
   def play    
     greeting
-    go_over_the_rules
     setup_game
     run_game
     end_game
@@ -26,17 +27,21 @@ class PlayRacko
   private
 
   def check_for_winner
-    @winning_player = @player_manager.current_player if @player_manager.current_player.rack.is_ordered?
+    if @player_manager.current_player.rack.is_ordered?
+      @winning_player = @player_manager.current_player 
+    end
   end
   
   # each player gets 9 cards. 
   # They are ordered in a rack. Cards are taken FROM the draw pile.
   def deal_cards
     MAX_CARDS.times do |d|
-      @player_manager.players.each { |player| player.rack.add_card(@decks_manager.draw_pile.draw_card) }
+      @player_manager.players.each do |player| 
+        player.rack.add_card(@decks_manager.draw_pile.draw_card)
+       end
     end
 
-    # initialize the discard pile with one card from the top of the draw pile
+    # prep the discard pile with one card from the top of the draw pile
     @decks_manager.discard_top_card
   end
 
@@ -45,30 +50,9 @@ class PlayRacko
     puts TEXT['game_over']
   end
 
-  # player chooses if they want to see the rules
-  def go_over_the_rules
-    wants_rules = ''
-    while !['yes', 'no'].include? wants_rules.downcase
-      print TEXT['intro']['ask_rules']
-      wants_rules = gets.chomp.downcase
-      system('clear')
-      if ['yes'].include? wants_rules
-        print TEXT['rules']
-        player_still_reading = true
-        while player_still_reading
-          puts 'Are you ready to play?'
-          player_ready = gets.chomp.downcase
-          player_still_reading = false if ['yes'].include?(player_ready)
-        end
-      elsif wants_rules == 'no'
-      else 
-        print TEXT['no_comprende']
-      end 
-    end
-  end 
-
   def greeting
     print TEXT['intro']['greeting']
+    @rules_manager.go_over_the_rules
   end
 
   def init_players
