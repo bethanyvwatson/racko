@@ -2,10 +2,10 @@ class RackoTurn < GameTurn
 
   TEXT = YAML.load_file('text.yml')
 
-  def initialize(current_player, draw_pile, discard_pile)
+  def initialize(current_player, deck_manager)
     @current_player = current_player
-    @draw_pile = draw_pile
-    @discard_pile = discard_pile
+    @draw_pile = deck_manager.draw_pile
+    @discard_pile = deck_manager.discard_pile
 
     @selected_card = nil
     @drew_from_discard = false

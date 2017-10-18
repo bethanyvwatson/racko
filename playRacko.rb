@@ -1,20 +1,18 @@
 class PlayRacko
   require 'yaml'
 
-  require_relative 'lib/deck.rb'
-  require_relative 'lib/racko_deck.rb'
   require_relative 'lib/player.rb'
-  require_relative 'lib/rack.rb'
-  require_relative 'lib/card.rb'
   require_relative 'lib/game_turn.rb'
   require_relative 'lib/racko_turn.rb'
   require_relative 'lib/player_manager.rb'
+  require_relative 'lib/decks_manager.rb'
 
   TEXT = YAML.load_file('text.yml')
   MAX_CARDS = 9
 
   def initialize
     @player_manager = PlayerManager.new
+    @decks_manager = DecksManager.new
   end
 
   def play    
@@ -35,10 +33,11 @@ class PlayRacko
   # They are ordered in a rack. Cards are taken FROM the draw pile.
   def deal_cards
     MAX_CARDS.times do |d|
-      @player_manager.players.each { |player| player.rack.add_card(@draw_pile.draw_card) }
+      @player_manager.players.each { |player| player.rack.add_card(@decks_manager.draw_pile.draw_card) }
     end
 
-    @discard_pile.add_to_deck(@draw_pile.draw_card)
+    # initialize the discard pile with one card from the top of the draw pile
+    @decks_manager.discard_top_card
   end
 
   def end_game
@@ -72,17 +71,6 @@ class PlayRacko
     print TEXT['intro']['greeting']
   end
 
-  def init_decks
-    @draw_pile = RackoDeck.new
-    @discard_pile = Deck.new
-
-    system('clear')
-    print TEXT['time_to_shuffle']
-    @draw_pile.shuffle
-
-    shuffle_decks
-  end
-
   def init_players
     @player_manager.init_players
     @winning_player = nil
@@ -92,17 +80,21 @@ class PlayRacko
     while @winning_player.nil?
       @player_manager.switch_players
 
-      validate_draw_pile
+      if @decks_manager.draw_pile.is_empty?
+        @decks_manager.reshuffle_discard_into_draw 
+        @decks_manager.let_players_shuffle_draw_pile
+        @decks_manager.discard_top_card
+      end
 
-      RackoTurn.new(@player_manager.current_player, @draw_pile, @discard_pile).take_turn
+      RackoTurn.new(@player_manager.current_player, @decks_manager).take_turn
 
       check_for_winner
     end
   end 
 
   def setup_game
-    init_players
-    init_decks
+    @player_manager.get_player_info
+    @decks_manager.let_players_shuffle_draw_pile
     deal_cards
   end
 
@@ -110,44 +102,11 @@ class PlayRacko
     system('clear')
 
     puts <<-TABLE
-    #{@discard_pile.cards.any? ? @discard_pile.cards.first.show : 'N/A'}          |*?*|
+    #{@decks_manager.discard_pile.cards.any? ? @decks_manager.discard_pile.cards.first.show : 'N/A'}          |*?*|
     TABLE
     print @player_manager.current_player.printable_player
 
     puts "Newest Card: #{@selected_card.show} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
-  end
-
-  # allow the players to shuffle the deck as many times as they want
-  def shuffle_decks
-    keep_shuffling = true
-    while keep_shuffling
-      system('clear')
-      puts ['Do you want to', 'Should we', 'Shall we'].sample + [' keep shuffling', ' shuffle'].sample + [' the cards',''].sample + [' again?', ' some more?', '?'].sample
-      response = gets.chomp.downcase
-      if ['yes'].include? response.downcase
-        @draw_pile.shuffle
-      elsif ['no'].include? response
-        keep_shuffling = false
-      else 
-        print TEXT['no_comprende']
-      end 
-    end
-  end
-
-  # ensure there are cards in the draw pile
-  # if not, reshuffle the discard pile and make that the new draw pile
-  def validate_draw_pile
-    if @draw_pile.is_empty?
-
-      system('clear')
-      puts TEXT['game_turn']['reshuffle']
-      @draw_pile = @discard_pile
-      @discard_pile = Deck.new
-
-      shuffle_decks
-
-      @discard_pile.add_to_deck(@draw_pile.draw_card)
-    end
   end
 
   PlayRacko.new.play
