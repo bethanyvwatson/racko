@@ -1,0 +1,10 @@
+This is a digital version of the Milton-Bradley game called "Racko." 
+
+In Racko, each player is dealt a "rack" of randomly ordered, numbered cards. The goal is to be the first player to have your rack of Racko cards sorted from lowest-to-highest. Players take turns, generally performing one action per turn. 
+
+But here's the catch: discarding certain cards cards allows the current player to sabotage an opponent or perform multiple actions per turn. Drama ensues.
+
+Learning Focus:
+1) Pure Ruby! This is the first significant project I've done in pure Ruby, without Rails or any other framework.
+2) Object Oriented Programming! I'm really trying to focus on following good OOP principles.
+3) Iterative development! Sometimes I have a tendency to want to do everything RIGHT NOW. With this project, I'm staying disciplined and trying to really compartmentalize each new functionality.
