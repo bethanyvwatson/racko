@@ -4,5 +4,4 @@ Playing Racko simply made me want to code it! The UI is simple, command-line bas
 
 Learning Focus:
 1) Pure Ruby! This is the first significant project I've done in pure Ruby, without Rails or any other framework.
-
 2) Iterative Development! Sometimes I have a tendency to want to do everything RIGHT NOW. With this project, I'm staying disciplined and trying to really compartmentalize each new functionality.
