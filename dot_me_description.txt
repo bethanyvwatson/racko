@@ -1,9 +1,8 @@
 Milton-Bradley owns "Racko" in real life. This is an imitation. 
 
-In Racko, each player is dealt a "rack" of randomly ordered, numbered cards. The goal is to be the first player to have your rack of Racko cards sorted from lowest-to-highest. Players take turns, generally performing one action per turn. Some cards allow players to perform special actions.
-
 Playing Racko simply made me want to code it! The UI is simple, command-line based because I didn't want to get bogged down in design. I look forward to the challenge of writing beatable computer players.
 
 Learning Focus:
 1) Pure Ruby! This is the first significant project I've done in pure Ruby, without Rails or any other framework.
+
 2) Iterative Development! Sometimes I have a tendency to want to do everything RIGHT NOW. With this project, I'm staying disciplined and trying to really compartmentalize each new functionality.
