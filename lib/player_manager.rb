@@ -13,7 +13,7 @@ class PlayerManager
 
   # get the names of each player
   # initialize player objects
-  def init_players
+  def get_player_info
     waiting_init_players = true
     while waiting_init_players
 
