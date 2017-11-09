@@ -2,22 +2,6 @@ class RackoTurn < GameTurn
 
   TEXT = YAML.load_file('text.yml')
 
-  AFFIRMATIVE = %w(1 y yes)
-  NEGATIVE = %w(0 n no)
-
-  PICK_PILE_INPUTS = <<-PILE
-  New Card (#{AFFIRMATIVE.join('/')})
-  Discarded Card(#{NEGATIVE.join('/')})
-  PILE
-
-  BEGIN_TURN_INPUTS = <<-BEGIN
-  That's me! Display my rack. (#{AFFIRMATIVE.join('/')})
-  BEGIN
-
-  FINISH_TURN_INPUTS = <<-FINISH
-  I'm done! Hide my rack. (#{AFFIRMATIVE.join('/')})
-  FINISH
-
   def initialize(current_player, deck_manager)
     @current_player = current_player
     @draw_pile = deck_manager.draw_pile
@@ -50,19 +34,19 @@ class RackoTurn < GameTurn
     waiting_to_pick_pile = true
     while waiting_to_pick_pile
       puts TEXT['game_turn']['draw_card']
-      puts PICK_PILE_INPUTS
+      puts InputManager.display_options({ affirmative: 'Draw New Card', negative: 'Take Last Discarded Card' })
       response = gets.chomp.to_s.downcase
 
       # If player picks the draw pile
       # draw the top card from that pile
-      if AFFIRMATIVE.include?(response)
+      if InputManager.affirmative?(response)
         @selected_card = @draw_pile.draw_card
         waiting_to_pick_pile = false
 
       # If player picks from discard pile
       # draw top card from that pile
       # player cannot discard this card
-      elsif NEGATIVE.include?(response)
+      elsif InputManager.negative?(response)
         @selected_card = @discard_pile.draw_card
         @drew_from_discard = true
         waiting_to_pick_pile = false
@@ -82,11 +66,11 @@ class RackoTurn < GameTurn
 
     while waiting_for_next_player
       puts "Are you #{@current_player.name}?"
-      puts BEGIN_TURN_INPUTS
-      response = gets.chomp.to_s.downcase
-      if AFFIRMATIVE.include?(response)
+      puts InputManager.display_options({ affirmative: 'Yes! Display my rack.'})
+      response = InputManager.get
+      if InputManager.affirmative?(response)
         waiting_for_next_player = false
-      elsif NEGATIVE.include?(response)
+      elsif InputManager.negative?(response)
         # do nothing
       else
         print TEXT['no_comprende']
@@ -101,11 +85,12 @@ class RackoTurn < GameTurn
     waiting_to_confirm_done = true
 
     while waiting_to_confirm_done
-      puts "Are you ready to finish your turn?"
-      response = gets.chomp.to_s.downcase
-      if AFFIRMATIVE.include?(response)
+      puts InputManager.display_options({ affirmative: 'Done! Hide my rack.'})
+      response = InputManager.get
+      if InputManager.affirmative?(response)
         waiting_to_confirm_done = false
-      elsif NEGATIVE.include?(response)
+      elsif InputManager.negative?(response)
+        # do nothing, wait
       else
         print TEXT['no_comprende']
       end
@@ -143,12 +128,12 @@ class RackoTurn < GameTurn
         @card_to_discard = nil
 
         puts TEXT['game_turn']['use_instructions']
-
-        @placement_response = gets.chomp
+        puts InputManager.display_options({ negative: 'Discard this Card', rack_positions: 'Switch With Card at Position' })
+        @placement_response = InputManager.get
 
         # If player chooses a location in their rack
         # Get ready to exchange those cards
-        if Rack::RACK_MARKERS.include? @placement_response.upcase
+        if InputManager::INPUTS[:rack_positions].include?(@placement_response)
           @card_to_replace = @current_player.rack.get_card(@placement_response)
           @card_to_discard = @card_to_replace
 
@@ -157,7 +142,7 @@ class RackoTurn < GameTurn
         # If player chooses to discard their card
         # get ready to discard their card
         # Disallow discard if card was drawn from the discard pile
-        elsif ['discard'].include? @placement_response
+        elsif InputManager.negative?(@placement_response)
           if @drew_from_discard
             puts TEXT['game_turn']['drew_from_discard_cannot_discard']
           else
@@ -181,19 +166,19 @@ class RackoTurn < GameTurn
 
       puts "You are discarding #{@card_to_discard.show}."
 
-      puts TEXT['game_turn']['confirm']
-      confirm_response = gets.chomp
+      puts InputManager.display_options({ affirmative: 'Save and complete turn.', negative: 'Restart this turn.' })
+      confirm_response = InputManager.get
 
       # If player confirms their decision
       # persist their decision
-      if ['yes'].include? confirm_response
+      if InputManager.affirmative?(confirm_response)
         @current_player.rack.replace_card(@placement_response, @selected_card) if @card_to_replace
         @discard_pile.add_to_deck(@card_to_discard)
         waiting_to_confirm_placement = false
       
       # If player changes their mind
       # allow them to choose how to use their card again 
-      elsif ['no'].include? confirm_response
+      elsif InputManager.negative?(confirm_response)
         waiting_to_use_card = true
       else
         puts TEXT['no_comprende']

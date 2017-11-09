@@ -4,13 +4,7 @@ require_relative "../lib/rack.rb"
 class PlayerManager
   attr_reader :current_player, :players
 
-  ACCEPTABLE_PLAYER_COUNTS = %w(2 3 4)
-  AFFIRMATIVE = %w(1 y yes)
-  NEGATIVE = %w(0 n no)
-  CONFIRM_PLAYER_INPUTS = <<-PLAYER_INPUTS
-  Confirm Players (#{AFFIRMATIVE.join('/')})
-  Redo Players (#{NEGATIVE.join('/')})
-  PLAYER_INPUTS
+  TEXT = YAML.load_file('text.yml')
 
   def initialize(players = [])
     @current_player = nil
@@ -22,21 +16,23 @@ class PlayerManager
   def get_player_info
     waiting_init_players = true
     while waiting_init_players
+      invalid_input = nil
 
       # get num players
       waiting_for_player_num = true
       while waiting_for_player_num
         system('clear')
         @players = []
-        
-        puts "How many players? (#{ACCEPTABLE_PLAYER_COUNTS.join('/')})"
-        num_players_response = gets.chomp.to_s
 
-        if ACCEPTABLE_PLAYER_COUNTS.include?(num_players_response)
+        puts 'Just a bit more setup before we start.'
+        puts InputManager.display_options({ player_counts: "How many players?" }, invalid_input)
+        num_players_response = InputManager.get
+
+        if InputManager::INPUTS[:player_counts].include?(num_players_response)
           waiting_for_player_num = false
           num_players = num_players_response.to_i
         else
-          puts TEXT['no_comprende']
+          invalid_input = num_players_response
         end
       end 
 
@@ -46,7 +42,7 @@ class PlayerManager
 
         print_roster
         puts "Enter a name for Player #{i + 1}:"
-        name = gets.chomp
+        name = InputManager.get
 
         @players << new_player(name)
       end
@@ -57,16 +53,16 @@ class PlayerManager
         system('clear')
         print_roster
         puts "Are you ready to play with these players?"
-        puts CONFIRM_PLAYER_INPUTS
-        confirm_response = gets.chomp
+        puts InputManager.display_options({ affirmative: 'Confirm Players', negative: 'Redo Players' })
+        confirm_response = InputManager.get
 
         # if yes, ready to play
-        if AFFIRMATIVE.include?(confirm_response)
+        if InputManager.affirmative?(confirm_response)
           waiting_confirm_players = false
           waiting_init_players = false 
 
         # if no, restart player selection
-        elsif NEGATIVE.include?(confirm_response)
+        elsif InputManager.negative?(confirm_response)
           waiting_for_player_num = true 
           waiting_confirm_players = false
         else

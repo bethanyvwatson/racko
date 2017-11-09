@@ -1,6 +1,7 @@
 class PlayRacko
   require 'yaml'
 
+  require_relative 'lib/input_manager.rb'
   require_relative 'lib/player.rb'
   require_relative 'lib/game_turn.rb'
   require_relative 'lib/racko_turn.rb'
