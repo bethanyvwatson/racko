@@ -58,16 +58,13 @@ class RackoTurn < GameTurn
   # ensure a safe handoff between the players
   # don't let the players see eachother's racks!
   def ready_player
-    system('clear')
-
     waiting_for_next_player = true
-    puts "It's #{@current_player.name}'s turn!"
-
     invalid_ready = nil
 
     while waiting_for_next_player
-      puts "Are you #{@current_player.name}?"
-      puts InputManager.display_options({ affirmative: 'Yes! Display my rack.'}, invalid_ready)
+      system('clear')
+      puts "It's #{@current_player.name}'s turn! Are you #{@current_player.name}?"
+      puts InputManager.display_options({ affirmative: 'Yes! Display my Rack'}, invalid_ready)
       invalid_ready = nil
       response = InputManager.get
       if InputManager.affirmative?(response)
@@ -89,7 +86,7 @@ class RackoTurn < GameTurn
     while waiting_to_confirm_done
       system('clear')
       show_state
-      puts InputManager.display_options({ affirmative: 'Done! Hide my rack.'}, invalid_confirmation)
+      puts InputManager.display_options({ affirmative: 'Done! Hide my Rack'}, invalid_confirmation)
       invalid_confirmation = nil
       
       response = InputManager.get
@@ -139,10 +136,8 @@ class RackoTurn < GameTurn
         @card_to_replace = nil
         @card_to_discard = nil
 
-        puts TEXT['game_turn']['use_instructions']
-        puts InputManager.display_options({ negative: 'Discard this Card', rack_positions: 'Switch With Card at Position' })
+        puts InputManager.display_options({ negative: 'Discard this Card', rack_positions: 'Switch With Card at Position' }, invalid_usage)
         invalid_usage = nil
-        puts InputManager::INPUTS[:rack_positions]
 
         @placement_response = InputManager.get
 
@@ -182,7 +177,7 @@ class RackoTurn < GameTurn
 
       puts "You are discarding #{@card_to_discard.show}."
 
-      puts InputManager.display_options({ affirmative: 'Save and complete turn.', negative: 'Restart this turn.' }, invalid_confirmation)
+      puts InputManager.display_options({ affirmative: 'Save and Complete Turn', negative: 'Do Something Different' }, invalid_confirmation)
       invalid_confirmation = nil
       confirm_response = InputManager.get
 

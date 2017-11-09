@@ -28,7 +28,7 @@ class DecksManager
     while keep_shuffling
       system('clear')
       puts "The cards have been shuffled! #{ask_to_shuffle_string}"
-      puts InputManager.display_options({ affirmative: 'Shuffle', negative: 'Start Playing' }, invalid_shuffle)
+      puts InputManager.display_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
       invalid_shuffle = nil
 
       response = InputManager.get

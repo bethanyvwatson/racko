@@ -21,7 +21,7 @@ class InputManager
   end
 
   def self.format_opts(text, inputs_array)
-    "\t#{text} #{inputs_array.join('/')}\n"
+    "\t#{text} (#{inputs_array.join('/')})\n"
   end
 
   def self.get
