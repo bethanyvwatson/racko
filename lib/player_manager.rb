@@ -5,6 +5,12 @@ class PlayerManager
   attr_reader :current_player, :players
 
   ACCEPTABLE_PLAYER_COUNTS = %w(2 3 4)
+  AFFIRMATIVE = %w(1 y yes)
+  NEGATIVE = %w(0 n no)
+  CONFIRM_PLAYER_INPUTS = <<-PLAYER_INPUTS
+  Confirm Players (#{AFFIRMATIVE.join('/')})
+  Redo Players (#{NEGATIVE.join('/')})
+  PLAYER_INPUTS
 
   def initialize(players = [])
     @current_player = nil
@@ -23,10 +29,10 @@ class PlayerManager
         system('clear')
         @players = []
         
-        puts "How many players? (#{ACCEPTABLE_PLAYER_COUNTS.to_s})"
+        puts "How many players? (#{ACCEPTABLE_PLAYER_COUNTS.join('/')})"
         num_players_response = gets.chomp.to_s
 
-        if ACCEPTABLE_PLAYER_COUNTS.include? num_players_response
+        if ACCEPTABLE_PLAYER_COUNTS.include?(num_players_response)
           waiting_for_player_num = false
           num_players = num_players_response.to_i
         else
@@ -38,6 +44,7 @@ class PlayerManager
       num_players.times do |i|
         system('clear')
 
+        print_roster
         puts "Enter a name for Player #{i + 1}:"
         name = gets.chomp
 
@@ -48,17 +55,18 @@ class PlayerManager
       waiting_confirm_players = true
       while waiting_confirm_players
         system('clear')
-        @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name}" }
-        puts "Is this correct? (yes or no)"
-
+        print_roster
+        puts "Are you ready to play with these players?"
+        puts CONFIRM_PLAYER_INPUTS
         confirm_response = gets.chomp
 
         # if yes, ready to play
-        if ['yes'].include? confirm_response
+        if AFFIRMATIVE.include?(confirm_response)
           waiting_confirm_players = false
           waiting_init_players = false 
+
         # if no, restart player selection
-        elsif ['no'].include? confirm_response
+        elsif NEGATIVE.include?(confirm_response)
           waiting_for_player_num = true 
           waiting_confirm_players = false
         else
@@ -83,5 +91,9 @@ class PlayerManager
 
   def new_player(name)
     Player.new(name, Rack.new)
+  end
+
+  def print_roster
+    @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name}" }
   end
 end

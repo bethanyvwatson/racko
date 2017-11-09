@@ -2,6 +2,22 @@ class RackoTurn < GameTurn
 
   TEXT = YAML.load_file('text.yml')
 
+  AFFIRMATIVE = %w(1 y yes)
+  NEGATIVE = %w(0 n no)
+
+  PICK_PILE_INPUTS = <<-PILE
+  New Card (#{AFFIRMATIVE.join('/')})
+  Discarded Card(#{NEGATIVE.join('/')})
+  PILE
+
+  BEGIN_TURN_INPUTS = <<-BEGIN
+  That's me! Display my rack. (#{AFFIRMATIVE.join('/')})
+  BEGIN
+
+  FINISH_TURN_INPUTS = <<-FINISH
+  I'm done! Hide my rack. (#{AFFIRMATIVE.join('/')})
+  FINISH
+
   def initialize(current_player, deck_manager)
     @current_player = current_player
     @draw_pile = deck_manager.draw_pile
@@ -34,18 +50,19 @@ class RackoTurn < GameTurn
     waiting_to_pick_pile = true
     while waiting_to_pick_pile
       puts TEXT['game_turn']['draw_card']
-      response = gets.chomp
+      puts PICK_PILE_INPUTS
+      response = gets.chomp.to_s.downcase
 
       # If player picks the draw pile
       # draw the top card from that pile
-      if ['new card'].include? response
+      if AFFIRMATIVE.include?(response)
         @selected_card = @draw_pile.draw_card
         waiting_to_pick_pile = false
 
       # If player picks from discard pile
       # draw top card from that pile
       # player cannot discard this card
-      elsif ['discarded card'].include? response
+      elsif NEGATIVE.include?(response)
         @selected_card = @discard_pile.draw_card
         @drew_from_discard = true
         waiting_to_pick_pile = false
@@ -64,11 +81,13 @@ class RackoTurn < GameTurn
     puts "It's #{@current_player.name}'s turn!"
 
     while waiting_for_next_player
-      print "Are you #{@current_player.name}?"
-      response = gets.chomp
-      if ['yes'].include? response
+      puts "Are you #{@current_player.name}?"
+      puts BEGIN_TURN_INPUTS
+      response = gets.chomp.to_s.downcase
+      if AFFIRMATIVE.include?(response)
         waiting_for_next_player = false
-      elsif ['no'].include? response
+      elsif NEGATIVE.include?(response)
+        # do nothing
       else
         print TEXT['no_comprende']
       end
@@ -83,10 +102,10 @@ class RackoTurn < GameTurn
 
     while waiting_to_confirm_done
       puts "Are you ready to finish your turn?"
-      response = gets.chomp
-      if ['yes'].include? response
+      response = gets.chomp.to_s.downcase
+      if AFFIRMATIVE.include?(response)
         waiting_to_confirm_done = false
-      elsif ['no'].include? response
+      elsif NEGATIVE.include?(response)
       else
         print TEXT['no_comprende']
       end

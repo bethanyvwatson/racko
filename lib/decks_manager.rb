@@ -7,6 +7,14 @@ class DecksManager
 
   TEXT = YAML.load_file('text.yml')
 
+  AFFIRMATIVE = %w(1 y yes)
+  NEGATIVE = %w(0 n no)
+
+  SHUFFLE_INPUTS = <<-SHUFFLE
+  Shuffle (#{AFFIRMATIVE.join('/')})
+  Start Playing (#{NEGATIVE.join('/')})
+  SHUFFLE
+
   attr_reader :discard_pile, :draw_pile
 
   def initialize
@@ -25,12 +33,13 @@ class DecksManager
     keep_shuffling = true
     while keep_shuffling
       system('clear')
-      puts ask_to_shuffle_string
-
-      response = gets.chomp.downcase
-      if ['yes'].include? response.downcase
+      puts 'The cards have been shuffled!' 
+      puts "#{ask_to_shuffle_string}"
+      puts SHUFFLE_INPUTS
+      response = gets.chomp.to_s.downcase
+      if AFFIRMATIVE.include?(response)
         @draw_pile.shuffle
-      elsif ['no'].include? response
+      elsif NEGATIVE.include?(response)
         keep_shuffling = false
       else 
         print TEXT['no_comprende']
