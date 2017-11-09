@@ -26,7 +26,7 @@ class InputManager
 
   def self.get
     input = gets.chomp.to_s.downcase
-    abort('Thanks for playing! Bye bye.') if INPUTS[:exit].include?(input)
+    abort(TEXT['exit']) if INPUTS[:exit].include?(input)
     input
   end
 

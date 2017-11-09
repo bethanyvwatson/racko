@@ -154,7 +154,7 @@ class RackoTurn < GameTurn
         # Disallow discard if card was drawn from the discard pile
         elsif InputManager.negative?(@placement_response)
           if @drew_from_discard
-            puts TEXT['game_turn']['drew_from_discard_cannot_discard']
+            puts "You cannot discard this card because you drew it from the discard pile."
           else
             @card_to_replace = nil
             @card_to_discard = @selected_card

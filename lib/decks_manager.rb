@@ -46,7 +46,7 @@ class DecksManager
   # reshuffle the discard pile and make that the new draw pile
   def reshuffle_discard_into_draw
     system('clear')
-    puts TEXT['game_turn']['reshuffle']
+    puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
   end

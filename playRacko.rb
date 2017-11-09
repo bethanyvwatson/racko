@@ -48,11 +48,11 @@ class PlayRacko
 
   def end_game
     puts "#{@player_manager.current_player.name} wins!!!"
-    puts TEXT['game_over']
+    abort(TEXT['exit'])
   end
 
   def greeting
-    print TEXT['intro']['greeting']
+    print TEXT['intro']
     @rules_manager.go_over_the_rules
   end
 

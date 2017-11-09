@@ -6,7 +6,7 @@ class RulesManager
     waiting_for_rules = true
     invalid_rules = nil
     while waiting_for_rules
-      print TEXT['intro']['ask_rules']
+      print "Before we start, do you want to read the rules for Ruby Racko?"
       print InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' }, invalid_rules)
       invalid_rules = nil
 
