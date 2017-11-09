@@ -5,13 +5,4 @@ class Player
     @name = name
     @rack = rack
   end 
-
-  def printable_player
-    <<-PLAYER
-    ====================
-    #{@name}
-    ====================
-    #{@rack.printable_rack}
-    PLAYER
-  end
 end

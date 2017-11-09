@@ -1,5 +1,7 @@
 class InputManager
   require_relative "../lib/rack.rb"
+  TEXT = YAML.load_file('text.yml')
+
 
   INPUTS = {
     affirmative: %w(1 y yes),

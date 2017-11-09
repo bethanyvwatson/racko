@@ -1,11 +1,7 @@
 class DecksManager
-  require 'yaml'  
-
   require_relative '../lib/deck.rb'
   require_relative '../lib/racko_deck.rb'
   require_relative '../lib/card.rb'
-
-  TEXT = YAML.load_file('text.yml')
 
   attr_reader :discard_pile, :draw_pile
 

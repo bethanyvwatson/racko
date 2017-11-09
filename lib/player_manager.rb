@@ -4,8 +4,6 @@ require_relative "../lib/rack.rb"
 class PlayerManager
   attr_reader :current_player, :players
 
-  TEXT = YAML.load_file('text.yml')
-
   def initialize(players = [])
     @current_player = nil
     @players = players

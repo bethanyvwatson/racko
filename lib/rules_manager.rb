@@ -5,17 +5,20 @@ class RulesManager
   def go_over_the_rules
     waiting_for_rules = true
     invalid_rules = nil
+    
     while waiting_for_rules
-      print "Before we start, do you want to read the rules for Ruby Racko?"
-      print InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' }, invalid_rules)
+      puts "Before we start, do you want to read the rules for Ruby Racko?"
+      puts InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' }, invalid_rules)
       invalid_rules = nil
 
       wants_rules = InputManager.get
       system('clear')
+
       if InputManager.affirmative?(wants_rules)
-        print TEXT['rules']
+        puts TEXT['rules']
         waiting_for_rules = false
         player_still_reading = true
+
         while player_still_reading
           puts InputManager.display_options({ affirmative: "Them's the rules! Ready to play?" })
           player_ready = InputManager.get
