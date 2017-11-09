@@ -1,6 +1,6 @@
 class Rack
   attr_reader :ordered_cards
-  RACK_MARKERS = %w(A B C D E F G H I)
+  RACK_MARKERS = %w(a b c d e f g h i)
 
   def initialize
     @ordered_cards = []
@@ -25,7 +25,7 @@ class Rack
   end
 
   def location(place_indicator)
-    RACK_MARKERS.index(place_indicator.upcase)
+    RACK_MARKERS.index(place_indicator)
   end
 
   def is_ordered?

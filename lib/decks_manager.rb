@@ -23,11 +23,13 @@ class DecksManager
   # allow the players to shuffle the deck as many times as they want
   def let_players_shuffle_draw_pile
     keep_shuffling = true
+    invalid_shuffle = nil
+
     while keep_shuffling
       system('clear')
-      puts 'The cards have been shuffled!' 
-      puts "#{ask_to_shuffle_string}"
-      puts InputManager.display_options({ affirmative: 'Shuffle', negative: 'Start Playing' })
+      puts "The cards have been shuffled! #{ask_to_shuffle_string}"
+      puts InputManager.display_options({ affirmative: 'Shuffle', negative: 'Start Playing' }, invalid_shuffle)
+      invalid_shuffle = nil
 
       response = InputManager.get
 
@@ -36,7 +38,7 @@ class DecksManager
       elsif InputManager.negative?(response)
         keep_shuffling = false
       else 
-        print TEXT['no_comprende']
+        invalid_shuffle = response
       end 
     end
   end

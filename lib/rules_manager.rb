@@ -4,9 +4,12 @@ class RulesManager
   # player chooses if they want to see the rules
   def go_over_the_rules
     waiting_for_rules = true
+    invalid_rules = nil
     while waiting_for_rules
       print TEXT['intro']['ask_rules']
-      print InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' })
+      print InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' }, invalid_rules)
+      invalid_rules = nil
+
       wants_rules = InputManager.get
       system('clear')
       if InputManager.affirmative?(wants_rules)
@@ -21,7 +24,7 @@ class RulesManager
       elsif InputManager.negative?(wants_rules)
         waiting_for_rules = false
       else 
-        print TEXT['no_comprende']
+        invalid_rules = wants_rules
       end 
     end
   end 
