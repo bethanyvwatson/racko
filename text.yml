@@ -1,28 +1,3 @@
-intro:
-  ask_rules:
-    "Do you want to hear the rules?\n"
-  get_player_info:
-    "Before we get started, what are your names?\n"
-  greeting: 
-    "Hey this is Racko!\n"
-  player1:
-    "Player 1, please enter your name now: "
-  player2:
-    "Player 2, go ahead and enter your name too: "
-game_turn:
-  confirm:
-    "Is this correct?\n"
-  draw_card:
-    "Draw a card! Type 'new card' to draw a new card from the draw pile, or 'discarded card' to take the top card on the discard pile.\n"
-  is_player_ready:
-    "Ready to clear the screen and display your rack?\n"
-  use_instructions:
-    "If you want to exchange your new card with one in your rack, enter the letter which corresponds to the card you want to replace. To discard your newest card, enter 'discard'."
-  reshuffle:
-    "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
-no_comprende:
-  "Sorry, I didn't understand that! Please respond yes or no.\n"
-rules:
-  "There are no rules!\n"
-game_over:
-  "Thanks for playing Racko!"
+exit: 'Bye bye! Thanks for playing Ruby Racko.'
+intro: 'THIS IS RUBY RACKO!!!'
+rules: 'Dont be dumb.'

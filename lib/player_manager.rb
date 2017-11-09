@@ -4,7 +4,7 @@ require_relative "../lib/rack.rb"
 class PlayerManager
   attr_reader :current_player, :players
 
-  ACCEPTABLE_PLAYER_COUNTS = %w(2 3 4)
+  TEXT = YAML.load_file('text.yml')
 
   def initialize(players = [])
     @current_player = nil
@@ -16,21 +16,25 @@ class PlayerManager
   def get_player_info
     waiting_init_players = true
     while waiting_init_players
+      invalid_count = nil
 
       # get num players
       waiting_for_player_num = true
       while waiting_for_player_num
         system('clear')
         @players = []
-        
-        puts "How many players? (#{ACCEPTABLE_PLAYER_COUNTS.to_s})"
-        num_players_response = gets.chomp.to_s
 
-        if ACCEPTABLE_PLAYER_COUNTS.include? num_players_response
+        puts 'Just a bit more setup before we start.'
+        puts InputManager.display_options({ player_counts: "How many players?" }, invalid_count)
+        invalid_count = nil
+
+        num_players_response = InputManager.get
+
+        if InputManager::INPUTS[:player_counts].include?(num_players_response)
           waiting_for_player_num = false
           num_players = num_players_response.to_i
         else
-          puts TEXT['no_comprende']
+          invalid_count = num_players_response
         end
       end 
 
@@ -38,31 +42,35 @@ class PlayerManager
       num_players.times do |i|
         system('clear')
 
+        print_roster
         puts "Enter a name for Player #{i + 1}:"
-        name = gets.chomp
+        name = InputManager.get
 
         @players << new_player(name)
       end
 
       # confirm players are correct
       waiting_confirm_players = true
+      invalid_confirmation = nil
       while waiting_confirm_players
         system('clear')
-        @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name}" }
-        puts "Is this correct? (yes or no)"
-
-        confirm_response = gets.chomp
+        print_roster
+        puts "Are you ready to play with these players?"
+        puts InputManager.display_options({ affirmative: 'Confirm Players', negative: 'Redo Players' }, invalid_confirmation)
+        invalid_confirmation = nil
+        confirm_response = InputManager.get
 
         # if yes, ready to play
-        if ['yes'].include? confirm_response
+        if InputManager.affirmative?(confirm_response)
           waiting_confirm_players = false
           waiting_init_players = false 
+
         # if no, restart player selection
-        elsif ['no'].include? confirm_response
+        elsif InputManager.negative?(confirm_response)
           waiting_for_player_num = true 
           waiting_confirm_players = false
         else
-          # ask again
+          invalid_confirmation = confirm_response
         end
       end
     end
@@ -83,5 +91,9 @@ class PlayerManager
 
   def new_player(name)
     Player.new(name, Rack.new)
+  end
+
+  def print_roster
+    @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name}" }
   end
 end

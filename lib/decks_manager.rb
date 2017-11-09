@@ -23,17 +23,22 @@ class DecksManager
   # allow the players to shuffle the deck as many times as they want
   def let_players_shuffle_draw_pile
     keep_shuffling = true
+    invalid_shuffle = nil
+
     while keep_shuffling
       system('clear')
-      puts ask_to_shuffle_string
+      puts "The cards have been shuffled! #{ask_to_shuffle_string}"
+      puts InputManager.display_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
+      invalid_shuffle = nil
 
-      response = gets.chomp.downcase
-      if ['yes'].include? response.downcase
+      response = InputManager.get
+
+      if InputManager.affirmative?(response)
         @draw_pile.shuffle
-      elsif ['no'].include? response
+      elsif InputManager.negative?(response)
         keep_shuffling = false
       else 
-        print TEXT['no_comprende']
+        invalid_shuffle = response
       end 
     end
   end
@@ -41,7 +46,7 @@ class DecksManager
   # reshuffle the discard pile and make that the new draw pile
   def reshuffle_discard_into_draw
     system('clear')
-    puts TEXT['game_turn']['reshuffle']
+    puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
   end
