@@ -20,6 +20,7 @@ class DecksManager
   def let_players_shuffle_draw_pile
     keep_shuffling = true
     invalid_shuffle = nil
+    animate_shuffle
 
     while keep_shuffling
       system('clear')
@@ -31,6 +32,7 @@ class DecksManager
 
       if InputManager.affirmative?(response)
         @draw_pile.shuffle
+        animate_shuffle
       elsif InputManager.negative?(response)
         keep_shuffling = false
       else 
@@ -45,6 +47,13 @@ class DecksManager
     puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
+  end
+
+  def animate_shuffle
+    system('clear')
+    puts 'Shuffling...'
+    sleep(0.3)
+    3.times { puts %w(S h u f f l i n g ...).shuffle.join; sleep(0.6) }
   end
 
   private
