@@ -1,6 +1,7 @@
 class PlayRacko
   require 'yaml'
 
+  require_relative 'lib/display_manager.rb'
   require_relative 'lib/input_manager.rb'
   require_relative 'lib/player.rb'
   require_relative 'lib/game_turn.rb'
@@ -52,7 +53,6 @@ class PlayRacko
   end
 
   def greeting
-    print TEXT['intro']
     @rules_manager.go_over_the_rules
   end
 
@@ -81,17 +81,6 @@ class PlayRacko
     @player_manager.get_player_info
     @decks_manager.let_players_shuffle_draw_pile
     deal_cards
-  end
-
-  def show_state
-    system('clear')
-
-    puts <<-TABLE
-    #{@decks_manager.discard_pile.cards.any? ? @decks_manager.discard_pile.cards.first.show : 'N/A'}          |*?*|
-    TABLE
-    print @player_manager.current_player.printable_player
-
-    puts "Newest Card: #{@selected_card.show} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
   end
 
   PlayRacko.new.play

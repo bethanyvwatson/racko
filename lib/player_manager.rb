@@ -4,7 +4,7 @@ require_relative "../lib/rack.rb"
 class PlayerManager
   attr_reader :current_player, :players
 
-  TEXT = YAML.load_file('text.yml')
+  PLAYER_COUNTS = %w(1 2 3 4)
 
   def initialize(players = [])
     @current_player = nil
@@ -21,11 +21,11 @@ class PlayerManager
       # get num players
       waiting_for_player_num = true
       while waiting_for_player_num
-        system('clear')
+        DisplayManager.prepare_pregame_display
         @players = []
 
         puts 'Just a bit more setup before we start.'
-        puts InputManager.display_options({ player_counts: "How many players?" }, invalid_count)
+        puts InputManager.input_options({ player_counts: "How many players?" }, invalid_count)
         invalid_count = nil
 
         num_players_response = InputManager.get
@@ -40,7 +40,7 @@ class PlayerManager
 
       # init that many players
       num_players.times do |i|
-        system('clear')
+        DisplayManager.prepare_pregame_display
 
         print_roster
         puts "Enter a name for Player #{i + 1}:"
@@ -53,10 +53,10 @@ class PlayerManager
       waiting_confirm_players = true
       invalid_confirmation = nil
       while waiting_confirm_players
-        system('clear')
+        DisplayManager.prepare_pregame_display
         print_roster
         puts "Are you ready to play with these players?"
-        puts InputManager.display_options({ affirmative: 'Confirm Players', negative: 'Redo Players' }, invalid_confirmation)
+        puts InputManager.input_options({ affirmative: 'Confirm Players', negative: 'Redo Players' }, invalid_confirmation)
         invalid_confirmation = nil
         confirm_response = InputManager.get
 

@@ -1,11 +1,14 @@
 class InputManager
   require_relative "../lib/rack.rb"
+  require_relative "../lib/player_manager.rb"
+  TEXT = YAML.load_file('text.yml')
+
 
   INPUTS = {
     affirmative: %w(1 y yes),
     exit: %w(qq quit),
     negative: %w(0 n no),
-    player_counts: %w(2 3 4), # move into RackInputs subclass
+    player_counts: PlayerManager::PLAYER_COUNTS, # move into RackInputs subclass
     rack_positions: Rack::RACK_MARKERS
   }
 
@@ -13,7 +16,7 @@ class InputManager
     INPUTS[:affirmative].include?(response)
   end
 
-  def self.display_options(opts, invalid_input = nil)
+  def self.input_options(opts, invalid_input = nil)
     display = invalid_input ? "Invalid input: #{invalid_input}.\n" : ''
     opts.each { |key, text| display += format_opts(text, INPUTS[key]) }
     display += format_opts('Exit Game', INPUTS[:exit])

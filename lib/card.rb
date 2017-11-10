@@ -5,7 +5,7 @@ class Card
     @number = num
   end
 
-  def show
-    "|*#{@number.to_s.length < 2 ? '0'+ @number.to_s : @number.to_s}*|"
+  def to_s
+    "#{@number.to_s.length < 2 ? '0' : ''}" + @number.to_s
   end
 end

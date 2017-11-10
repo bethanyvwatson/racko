@@ -1,11 +1,7 @@
 class DecksManager
-  require 'yaml'  
-
   require_relative '../lib/deck.rb'
   require_relative '../lib/racko_deck.rb'
   require_relative '../lib/card.rb'
-
-  TEXT = YAML.load_file('text.yml')
 
   attr_reader :discard_pile, :draw_pile
 
@@ -24,17 +20,19 @@ class DecksManager
   def let_players_shuffle_draw_pile
     keep_shuffling = true
     invalid_shuffle = nil
+    animate_shuffle
 
     while keep_shuffling
-      system('clear')
+      DisplayManager.prepare_pregame_display
       puts "The cards have been shuffled! #{ask_to_shuffle_string}"
-      puts InputManager.display_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
+      puts InputManager.input_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
       invalid_shuffle = nil
 
       response = InputManager.get
 
       if InputManager.affirmative?(response)
         @draw_pile.shuffle
+        animate_shuffle
       elsif InputManager.negative?(response)
         keep_shuffling = false
       else 
@@ -45,10 +43,17 @@ class DecksManager
 
   # reshuffle the discard pile and make that the new draw pile
   def reshuffle_discard_into_draw
-    system('clear')
+    DisplayManager.prepare_pregame_display
     puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
+  end
+
+  def animate_shuffle
+    DisplayManager.prepare_pregame_display
+    puts 'Shuffling...'
+    sleep(0.3)
+    3.times { puts %w(S h u f f l i n g ...).shuffle.join; sleep(0.6) }
   end
 
   private

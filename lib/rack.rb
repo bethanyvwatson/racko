@@ -1,5 +1,6 @@
 class Rack
   attr_reader :ordered_cards
+
   RACK_MARKERS = %w(a b c d e f g h i)
 
   def initialize
@@ -10,14 +11,23 @@ class Rack
     @ordered_cards.unshift(card)
   end
 
-  def replace_card(place_indicator, new_card)
-    replaced_card = get_card(place_indicator)
-    set_card(place_indicator, new_card)
-    replaced_card
+  def formatted_markers
+    RACK_MARKERS.join('    ')
   end
 
   def get_card(place_indicator)
     @ordered_cards[location(place_indicator)]
+  end
+
+  def is_ordered?
+    nums = @ordered_cards.map(&:number)
+    nums == nums.sort
+  end
+
+  def replace_card(place_indicator, new_card)
+    replaced_card = get_card(place_indicator)
+    set_card(place_indicator, new_card)
+    replaced_card
   end
 
   def set_card(place_indicator, new_card)
@@ -28,20 +38,11 @@ class Rack
     RACK_MARKERS.index(place_indicator)
   end
 
-  def is_ordered?
-    nums = @ordered_cards.map(&:number)
-    nums == nums.sort
+  def to_placeholder
+    to_s.gsub(/\d/, '?')
   end
 
-  def print_cards
-    printable_cards = @ordered_cards.map(&:number)
-    print printable_cards
-  end
-
-  def printable_rack
-    <<-RACK
-    #{@ordered_cards.map(&:show).to_s}
-    #{RACK_MARKERS.to_s}
-    RACK
+  def to_s
+    @ordered_cards.map(&:to_s).join(' / ')
   end
 end
