@@ -16,7 +16,7 @@ class InputManager
     INPUTS[:affirmative].include?(response)
   end
 
-  def self.display_options(opts, invalid_input = nil)
+  def self.input_options(opts, invalid_input = nil)
     display = invalid_input ? "Invalid input: #{invalid_input}.\n" : ''
     opts.each { |key, text| display += format_opts(text, INPUTS[key]) }
     display += format_opts('Exit Game', INPUTS[:exit])

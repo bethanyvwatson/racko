@@ -25,11 +25,11 @@ class RackoTurn < GameTurn
 
     invalid_pile = nil
     while waiting_to_pick_pile
-      system('clear')
+      DisplayManager.prepare_ingame_display
       show_state
 
       puts "Do you want to draw a new card, or use the top discarded card?"
-      puts InputManager.display_options({ affirmative: 'Draw New Card', negative: 'Take Last Discarded Card' }, invalid_pile)
+      puts InputManager.input_options({ affirmative: 'Draw New Card', negative: 'Take Last Discarded Card' }, invalid_pile)
       invalid_pile = nil
       
       response = InputManager.get
@@ -60,10 +60,10 @@ class RackoTurn < GameTurn
     invalid_ready = nil
 
     while waiting_for_next_player
-      system('clear')
+      DisplayManager.prepare_ingame_display
       show_state(true)
       puts "It's #{@current_player.name}'s turn! Are you #{@current_player.name}?"
-      puts InputManager.display_options({ affirmative: 'Yes! Display my Rack'}, invalid_ready)
+      puts InputManager.input_options({ affirmative: 'Yes! Display my Rack'}, invalid_ready)
       invalid_ready = nil
 
       response = InputManager.get
@@ -77,7 +77,7 @@ class RackoTurn < GameTurn
       end
     end 
 
-    system('clear')
+    DisplayManager.prepare_ingame_display
   end
 
   # Give the player time to review their rack, then clear the screen
@@ -86,10 +86,10 @@ class RackoTurn < GameTurn
     invalid_confirmation = nil
 
     while waiting_to_confirm_done
-      system('clear')
+      DisplayManager.prepare_ingame_display
       show_state
       puts 'Done! Your turn is now over.'
-      puts InputManager.display_options({ affirmative: 'Hide my Rack'}, invalid_confirmation)
+      puts InputManager.input_options({ affirmative: 'Hide my Rack'}, invalid_confirmation)
       invalid_confirmation = nil
       
       response = InputManager.get
@@ -103,7 +103,7 @@ class RackoTurn < GameTurn
       end
     end 
 
-    system('clear')
+    DisplayManager.prepare_ingame_display
   end
 
   def reset_turn
@@ -113,7 +113,7 @@ class RackoTurn < GameTurn
 
   # Make a display service?
   def show_state(anonymize = false)
-    system('clear')
+    DisplayManager.prepare_ingame_display
     puts "\t" + '-' * 50
     puts "\tDraw Pile: ??          Discard Pile: #{(@discard_pile.cards.first || 'N/A').to_s}"
     puts "\t" + '-' * 50
@@ -141,14 +141,14 @@ class RackoTurn < GameTurn
 
     while waiting_to_confirm_placement
       while waiting_to_use_card
-        system('clear')
+        DisplayManager.prepare_ingame_display
         show_state
         puts "Newest Card: #{@selected_card.to_s} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
 
         @card_to_replace = nil
         @card_to_discard = nil
 
-        puts InputManager.display_options({ negative: 'Discard this Card', rack_positions: 'Switch With Card at Position' }, invalid_usage)
+        puts InputManager.input_options({ negative: 'Discard this Card', rack_positions: 'Switch With Card at Position' }, invalid_usage)
         invalid_usage = nil
 
         @placement_response = InputManager.get
@@ -178,7 +178,7 @@ class RackoTurn < GameTurn
         end
       end
 
-      system('clear')
+      DisplayManager.prepare_ingame_display
       show_state
       puts "Newest Card: #{@selected_card.to_s}"
 
@@ -190,7 +190,7 @@ class RackoTurn < GameTurn
 
       puts "You are discarding #{@card_to_discard.to_s}."
 
-      puts InputManager.display_options({ affirmative: 'Save and Complete Turn', negative: 'Do Something Different' }, invalid_confirmation)
+      puts InputManager.input_options({ affirmative: 'Save and Complete Turn', negative: 'Do Something Different' }, invalid_confirmation)
       invalid_confirmation = nil
       confirm_response = InputManager.get
 

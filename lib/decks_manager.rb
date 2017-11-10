@@ -23,9 +23,9 @@ class DecksManager
     animate_shuffle
 
     while keep_shuffling
-      DisplayManager.prepare_display
+      DisplayManager.prepare_pregame_display
       puts "The cards have been shuffled! #{ask_to_shuffle_string}"
-      puts InputManager.display_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
+      puts InputManager.input_options({ affirmative: 'Shuffle Again', negative: 'Start Playing' }, invalid_shuffle)
       invalid_shuffle = nil
 
       response = InputManager.get
@@ -43,14 +43,14 @@ class DecksManager
 
   # reshuffle the discard pile and make that the new draw pile
   def reshuffle_discard_into_draw
-    DisplayManager.prepare_display
+    DisplayManager.prepare_pregame_display
     puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
   end
 
   def animate_shuffle
-    DisplayManager.prepare_display
+    DisplayManager.prepare_pregame_display
     puts 'Shuffling...'
     sleep(0.3)
     3.times { puts %w(S h u f f l i n g ...).shuffle.join; sleep(0.6) }
