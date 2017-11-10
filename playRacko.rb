@@ -52,7 +52,7 @@ class PlayRacko
   end
 
   def greeting
-    puts TEXT['intro']
+    puts TEXT['racko']
     @rules_manager.go_over_the_rules
   end
 

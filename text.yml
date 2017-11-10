@@ -1,3 +1,11 @@
 exit: 'Bye bye! Thanks for playing Ruby Racko.'
 intro: 'THIS IS RUBY RACKO!!!'
 rules: 'Dont be dumb.'
+racko: 
+  "
+  \t  ___      _           ___         _        \n
+  \t | _ \\_  _| |__ _  _  | _ \\__ _ __| |_____  \n
+  \t |   / || | '_ \\ || | |   / _` / _| / / _ \\ \n
+  \t |_|_\\\\_,_|_.__/\\_, | |_|_\\__,_\\__|_\\_\\___/ \n
+  \t                |__/                        \n
+  "
