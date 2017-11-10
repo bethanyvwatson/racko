@@ -1,6 +1,7 @@
 class PlayRacko
   require 'yaml'
 
+  require_relative 'lib/display_manager.rb'
   require_relative 'lib/input_manager.rb'
   require_relative 'lib/player.rb'
   require_relative 'lib/game_turn.rb'
@@ -52,8 +53,6 @@ class PlayRacko
   end
 
   def greeting
-    system('clear')
-    puts TEXT['racko']
     @rules_manager.go_over_the_rules
   end
 

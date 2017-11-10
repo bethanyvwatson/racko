@@ -7,12 +7,13 @@ class RulesManager
     invalid_rules = nil
     
     while waiting_for_rules
+      DisplayManager.prepare_display
       puts "Before we start, do you want to read the rules for Ruby Racko?"
       puts InputManager.display_options({ affirmative: 'Read Rules', negative: 'Skip Rules' }, invalid_rules)
       invalid_rules = nil
 
       wants_rules = InputManager.get
-      system('clear')
+      DisplayManager.prepare_display
 
       if InputManager.affirmative?(wants_rules)
         puts TEXT['rules']

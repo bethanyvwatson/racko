@@ -1,5 +1,6 @@
 class InputManager
   require_relative "../lib/rack.rb"
+  require_relative "../lib/player_manager.rb"
   TEXT = YAML.load_file('text.yml')
 
 
@@ -7,7 +8,7 @@ class InputManager
     affirmative: %w(1 y yes),
     exit: %w(qq quit),
     negative: %w(0 n no),
-    player_counts: %w(2 3 4), # move into RackInputs subclass
+    player_counts: PlayerManager::PLAYER_COUNTS, # move into RackInputs subclass
     rack_positions: Rack::RACK_MARKERS
   }
 

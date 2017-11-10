@@ -115,7 +115,7 @@ class RackoTurn < GameTurn
   def show_state(anonymize = false)
     system('clear')
     puts "\t" + '-' * 50
-    puts "\tDiscard Pile: #{(@discard_pile.cards.first || 'N/A').to_s}          Draw Pile: ??"
+    puts "\tDraw Pile: ??          Discard Pile: #{(@discard_pile.cards.first || 'N/A').to_s}"
     puts "\t" + '-' * 50
 
     if anonymize
