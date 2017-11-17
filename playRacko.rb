@@ -11,7 +11,7 @@ class PlayRacko
   require_relative 'lib/rules_manager.rb'
 
   TEXT = YAML.load_file('text.yml')
-  MAX_CARDS = 9
+  MAX_CARDS = 10
 
   def initialize
     @player_manager = PlayerManager.new

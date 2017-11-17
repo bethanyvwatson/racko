@@ -1,7 +1,7 @@
 class Rack
   attr_reader :ordered_cards
 
-  RACK_MARKERS = %w(a b c d e f g h i)
+  RACK_MARKERS = %w(a b c d e f g h i j)
 
   def initialize
     @ordered_cards = []
