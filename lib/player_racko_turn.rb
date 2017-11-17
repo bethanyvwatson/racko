@@ -1,4 +1,5 @@
-require '../lib/racko_turn.rb'
+require_relative "../lib/racko_turn.rb"
+
 class PlayerRackoTurn < RackoTurn
 
   private
@@ -94,23 +95,6 @@ class PlayerRackoTurn < RackoTurn
     @drew_from_discard = false
   end
 
-  # Make a display service?
-  def show_state(anonymize = false)
-    DisplayManager.prepare_ingame_display
-    show_deck_state
-
-    if anonymize
-      puts
-      puts "\tSwitching Turns"
-      puts "\t" + @current_player.rack.to_placeholder
-    else 
-      puts
-      puts "\t#{@current_player.name}'s Turn"
-      puts "\t" + @current_player.rack.to_s
-    end
-    puts "\t " + @current_player.rack.formatted_markers
-  end
-
   # Player has drawn their card. 
   # Now they decide where to put it in their rack.
   # They can discard it if the card was not drawn from the discard pile.
@@ -147,7 +131,7 @@ class PlayerRackoTurn < RackoTurn
           if @drew_from_discard
             puts "You cannot discard this card because you drew it from the discard pile."
           else
-
+            prep_discard_drawn_card
             waiting_to_use_card = false
           end
         else

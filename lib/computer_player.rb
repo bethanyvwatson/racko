@@ -1,6 +1,3 @@
-require '../lib/player.rb'
-require '../lib/computer_player_brain.rb'
-
 class ComputerPlayer < Player
   attr_accessor :brain
 
@@ -10,7 +7,7 @@ class ComputerPlayer < Player
   end
 
   def evaluate_number_placement(number)
-    @brain.index_to_replace(number, @rack)
+    @brain.index_to_replace(number, @rack.ordered_cards.map(&:number))
   end
 
   private
@@ -20,6 +17,6 @@ class ComputerPlayer < Player
     first = %w(Chris Pat Sasha Taylor Max)
     last = %w(Merchant Barber Green Brown)
 
-    suffix.sample + first.sample + last.sample
+    [suffix.sample, first.sample, last.sample].join(' ')
   end
 end

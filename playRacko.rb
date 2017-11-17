@@ -4,6 +4,10 @@ class PlayRacko
   require_relative 'lib/display_manager.rb'
   require_relative 'lib/input_manager.rb'
   require_relative 'lib/player.rb'
+  require_relative 'lib/computer_player.rb'
+  require_relative 'lib/computer_player_racko_turn.rb'
+  require_relative 'lib/player_racko_turn.rb'
+  require_relative 'lib/computer_player_brain.rb'
   require_relative 'lib/racko_turn.rb'
   require_relative 'lib/player_manager.rb'
   require_relative 'lib/decks_manager.rb'
@@ -47,7 +51,9 @@ class PlayRacko
   end
 
   def end_game
-    puts "#{@player_manager.current_player.name} wins!!!"
+    DisplayManager.prepare_pregame_display
+    puts "\t#{@winning_player.name} wins!!!"
+    puts @current_turn.show_rack
     abort(TEXT['exit'])
   end
 
@@ -61,6 +67,7 @@ class PlayRacko
   end
 
   def run_game
+    @current_turn = nil
     while @winning_player.nil?
       @player_manager.switch_players
 
@@ -70,15 +77,17 @@ class PlayRacko
         @decks_manager.discard_top_card
       end
 
-      new_turn.take_turn
+      @current_turn = new_turn
+      @current_turn.take_turn
 
       check_for_winner
     end
   end 
 
   def new_turn
-    player = @PlayerManager.current_player
-    player.class.new(@player_manager.current_player, @decks_manager)
+    player = @player_manager.current_player
+    player_class = eval('::' + player.class.to_s + 'RackoTurn')
+    player_class.new(@player_manager.current_player, @decks_manager)
   end
 
   def setup_game

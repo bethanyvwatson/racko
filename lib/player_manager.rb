@@ -1,4 +1,5 @@
 require_relative "../lib/player.rb"
+require_relative "../lib/computer_player.rb"
 require_relative "../lib/rack.rb"
 
 class PlayerManager
@@ -25,7 +26,7 @@ class PlayerManager
         @players = []
 
         puts 'Just a bit more setup before we start.'
-        puts InputManager.input_options({ player_counts: "How many players?" }, invalid_count)
+        puts InputManager.input_options({ player_counts: "How many human players?" }, invalid_count)
         invalid_count = nil
 
         num_players_response = InputManager.get
@@ -48,6 +49,8 @@ class PlayerManager
 
         @players << new_player(name)
       end
+
+      @players << new_computer_player
 
       # confirm players are correct
       waiting_confirm_players = true
@@ -89,11 +92,15 @@ class PlayerManager
     @current_player = @players.first
   end
 
+  def new_computer_player
+    ComputerPlayer.new(Rack.new)
+  end
+
   def new_player(name)
     Player.new(name, Rack.new)
   end
 
   def print_roster
-    @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name}" }
+    @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name} #{'(cpu)' if p.is_a?(ComputerPlayer)}" }
   end
 end

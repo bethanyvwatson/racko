@@ -9,6 +9,30 @@ class RackoTurn
     @drew_from_discard = false
   end
 
+  def show_deck_state
+    puts "\t" + '-' * 50
+    puts "\tDraw Pile: ??          Discard Pile: #{(@discard_pile.cards.first || 'N/A').to_s}"
+    puts "\t" + '-' * 50
+  end
+
+  def show_rack(anonymize = false)
+    puts "\t" + (anonymize ? @current_player.rack.to_placeholder : @current_player.rack.to_s)
+    puts "\t " + @current_player.rack.formatted_markers
+  end
+
+  # Make a display service?
+  def show_state(anonymize = false)
+    DisplayManager.prepare_ingame_display
+    show_deck_state
+
+    # blank line
+    puts
+
+    puts (anonymize ? "\tSwitching Turns" : "\t#{@current_player.name}'s Turn")
+
+    show_rack(anonymize)
+  end
+
   def take_turn
     reset_turn
     ready_player
@@ -29,7 +53,7 @@ class RackoTurn
   end
 
   def prep_place_card_in_rack(placement_indicator)
-    @card_to_replace = @current_player.rack.get_card(placement_response)
+    @card_to_replace = @current_player.rack.get_card(placement_indicator)
     @card_to_discard = @card_to_replace
   end
 
@@ -46,11 +70,5 @@ class RackoTurn
   def reset_turn
     @selected_card = nil
     @drew_from_discard = false
-  end
-
-  def show_deck_state
-    puts "\t" + '-' * 50
-    puts "\tDraw Pile: ??          Discard Pile: #{(@discard_pile.cards.first || 'N/A').to_s}"
-    puts "\t" + '-' * 50
   end
 end
