@@ -51,9 +51,10 @@ class ComputerPlayerRackoTurn < RackoTurn
     DisplayManager.prepare_ingame_display
     show_deck_state
 
+    puts # blank line
     puts (anonymize ? "\tSwitching Turns" : "\t#{@current_player.name}'s Turn")
 
-    show_rack(anonymize)
+    show_rack(true)
 
     puts "#{@current_player.name} drew from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile." if @selected_card
     puts "They discarded #{@card_to_discard.to_s}." if @card_to_discard
@@ -62,7 +63,7 @@ class ComputerPlayerRackoTurn < RackoTurn
   def thinking(num_times)
     num_times.times do |not_used|
       puts %w(Thinking... Hmmm... Maybe... ...wait! Yeah.).sample
-      sleep(1.5)
+      sleep(rand + 0.4)
     end
   end
 
@@ -81,6 +82,5 @@ class ComputerPlayerRackoTurn < RackoTurn
     end
 
     save_and_discard(placement_indicator)
-
   end
 end
