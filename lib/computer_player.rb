@@ -9,7 +9,9 @@ class ComputerPlayer < Player
     @brain = ComputerPlayerBrain.new
   end
 
-  
+  def evaluate_number_placement(number)
+    @brain.index_to_replace(number, @rack)
+  end
 
   private
 

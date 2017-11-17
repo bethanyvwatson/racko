@@ -4,7 +4,6 @@ class PlayRacko
   require_relative 'lib/display_manager.rb'
   require_relative 'lib/input_manager.rb'
   require_relative 'lib/player.rb'
-  require_relative 'lib/game_turn.rb'
   require_relative 'lib/racko_turn.rb'
   require_relative 'lib/player_manager.rb'
   require_relative 'lib/decks_manager.rb'
@@ -71,11 +70,16 @@ class PlayRacko
         @decks_manager.discard_top_card
       end
 
-      RackoTurn.new(@player_manager.current_player, @decks_manager).take_turn
+      new_turn.take_turn
 
       check_for_winner
     end
   end 
+
+  def new_turn
+    player = @PlayerManager.current_player
+    player.class.new(@player_manager.current_player, @decks_manager)
+  end
 
   def setup_game
     @player_manager.get_player_info

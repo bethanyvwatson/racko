@@ -24,6 +24,7 @@ class Rack
     nums == nums.sort
   end
 
+  # Is this needed anymore?
   def replace_card(place_indicator, new_card)
     replaced_card = get_card(place_indicator)
     set_card(place_indicator, new_card)
