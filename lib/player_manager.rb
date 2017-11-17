@@ -5,7 +5,7 @@ require_relative "../lib/rack.rb"
 class PlayerManager
   attr_reader :current_player, :players
 
-  PLAYER_COUNTS = %w(1 2 3 4)
+  PLAYER_COUNTS = %w(0 1 2 3 4)
 
   def initialize(players = [])
     @current_player = nil
@@ -17,9 +17,12 @@ class PlayerManager
   def get_player_info
     waiting_init_players = true
     while waiting_init_players
-
-      init_human_players
-      init_computer_player
+      @players = []
+      
+      while @players.length < 1
+        init_human_players
+        init_computer_player
+      end
 
       # confirm players are correct
       waiting_confirm_players = true
@@ -96,9 +99,8 @@ class PlayerManager
 
     while waiting_for_player_num
       DisplayManager.prepare_pregame_display
-      @players = []
 
-      puts 'Just a bit more setup before we start.'
+      puts 'We need some players!'
       puts InputManager.input_options({ player_counts: "How many human players?" }, invalid_count)
       invalid_count = nil
 

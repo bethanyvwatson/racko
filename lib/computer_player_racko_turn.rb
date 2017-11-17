@@ -36,22 +36,24 @@ class ComputerPlayerRackoTurn < RackoTurn
   # Give the player time to review their rack, then clear the screen
   def finish_turn
     invalid_confirmation = nil
-
-    show_state
-    puts "#{@current_player.name} is done! Ready to move on?"
-    
     waiting_to_confirm_done = true
-    puts InputManager.input_options({ affirmative: 'Hide Their Rack'}, invalid_confirmation)
-    invalid_confirmation = nil
-    
-    response = InputManager.get
 
-    if InputManager.affirmative?(response)
-      waiting_to_confirm_done = false
-    elsif InputManager.negative?(response)
-      # do nothing, wait
-    else
-      invalid_confirmation = response
+    while waiting_to_confirm_done
+      DisplayManager.prepare_ingame_display
+      show_state
+      puts "#{@current_player.name} is done! Ready to move on?"
+      puts InputManager.input_options({ affirmative: 'Hide Their Rack'}, invalid_confirmation)
+      invalid_confirmation = nil
+      
+      response = InputManager.get
+
+      if InputManager.affirmative?(response)
+        waiting_to_confirm_done = false
+      elsif InputManager.negative?(response)
+        # do nothing, wait
+      else
+        invalid_confirmation = response
+      end
     end
   end
 
