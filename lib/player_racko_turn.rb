@@ -103,13 +103,16 @@ class PlayerRackoTurn < RackoTurn
     waiting_to_use_card = true
     invalid_usage = nil
     invalid_confirmation = nil
-
+    remind_cannot_discard = nil
+    
     while waiting_to_confirm_placement
       while waiting_to_use_card
         DisplayManager.prepare_ingame_display
         show_state
         puts "Newest Card: #{@selected_card.to_s} #{'* you cannot discard this card' if @drew_from_discard}" unless @selected_card.nil?
-
+        puts "You cannot discard this card because you drew it from the discard pile." if remind_cannot_discard
+        remind_cannot_discard = false
+        
         @card_to_replace = nil
         @card_to_discard = nil
 
@@ -129,7 +132,7 @@ class PlayerRackoTurn < RackoTurn
         # Disallow discard if card was drawn from the discard pile
         elsif InputManager.negative?(@placement_response)
           if @drew_from_discard
-            puts "You cannot discard this card because you drew it from the discard pile."
+            remind_cannot_discard = true
           else
             prep_discard_drawn_card
             waiting_to_use_card = false
