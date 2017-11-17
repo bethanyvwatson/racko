@@ -1,10 +1,12 @@
 class ComputerPlayerBrain
+  HIGH_NO_BRAINERS = (58..60).to_a
+  LOW_NO_BRAINERS = (1..3).to_a
 
   # returns index for recommended placement, or -1 to discard
   def index_to_replace(newest_number, rack_numbers)
-    if newest_number == 60
+    if HIGH_NO_BRAINERS.include?(newest_number)
       return rack_numbers.length - 1
-    elsif newest_number == 1
+    elsif LOW_NO_BRAINERS.include?(newest_number)
       return 0
     else
       rack_numbers.each.with_index do |curr, i|
@@ -24,6 +26,8 @@ class ComputerPlayerBrain
     # decide to discard the newest_card
     return -1
   end
+
+  private
 
   # is the current number larger than the previous and smaller than the newest?
   def current_number_is_better_fit?(curr, i, rack_numbers, newest_number)

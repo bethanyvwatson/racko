@@ -6,7 +6,7 @@ class ComputerPlayer < Player
     @brain = ComputerPlayerBrain.new
   end
 
-  def evaluate_number_placement(number)
+  def find_useful_rack_placement(number)
     @brain.index_to_replace(number, @rack.ordered_cards.map(&:number))
   end
 

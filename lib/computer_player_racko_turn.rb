@@ -1,4 +1,5 @@
 require_relative "../lib/racko_turn.rb"
+require_relative "../lib/computer_player_brain.rb"
 
 class ComputerPlayerRackoTurn < RackoTurn
 
@@ -7,12 +8,22 @@ class ComputerPlayerRackoTurn < RackoTurn
   # Player picks which pile they want to pick a card from: draw pile, or discard pile
   def draw_card
     DisplayManager.prepare_ingame_display
-    choose_new_card
+    show_state
+    thinking(1)
+
+    @place_for_top_discarded = @current_player.find_useful_rack_placement(@discard_pile.cards.first.number)
+    
+    if useful_placement?(@place_for_top_discarded)
+      choose_discard
+    else
+      choose_new_card
+    end
+
+    thinking(2)
+
     show_state
 
-    @drew_from_discard = false
-
-    puts "#{@current_player.name} has drawn from the Draw Pile."
+    puts "#{@current_player.name} has drawn from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile."
   end
 
   # ensure a safe handoff between the players
@@ -20,8 +31,6 @@ class ComputerPlayerRackoTurn < RackoTurn
   def ready_player
     show_state
     puts "It's #{@current_player.name}'s turn."
-    thinking(3)
-    sleep(1.5)
   end
 
   # Give the player time to review their rack, then clear the screen
@@ -56,7 +65,7 @@ class ComputerPlayerRackoTurn < RackoTurn
 
     show_rack(true)
 
-    puts "#{@current_player.name} drew from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile." if @selected_card
+    puts "#{@current_player.name} drew #{@selected_card.to_s} from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile." if @selected_card
     puts "They discarded #{@card_to_discard.to_s}." if @card_to_discard
   end
 
@@ -71,10 +80,19 @@ class ComputerPlayerRackoTurn < RackoTurn
   # Now they decide where to put it in their rack.
   # They can discard it if the card was not drawn from the discard pile.
   def use_card
-    index_to_place = @current_player.evaluate_number_placement(@selected_card.number)
+    # if we drew from the discard pile, 
+    # we already know where we want to use the card
+    if @drew_from_discard
+      index_to_place = @place_for_top_discarded
+    else
+      index_to_place = @current_player.find_useful_rack_placement(@selected_card.number)
+    end
+
     placement_indicator = nil
 
-    if index_to_place >= 0
+    # computer players will only draw the discarded card if they can use it
+    # so there is no risk of them trying to discard the card
+    if useful_placement?(index_to_place)
       placement_indicator = Rack::RACK_MARKERS[index_to_place]
       prep_place_card_in_rack(placement_indicator)
     else
@@ -82,5 +100,9 @@ class ComputerPlayerRackoTurn < RackoTurn
     end
 
     save_and_discard(placement_indicator)
+  end
+
+  def useful_placement?(index)
+    index >= 0
   end
 end
