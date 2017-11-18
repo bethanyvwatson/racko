@@ -1,7 +1,7 @@
 class Rack
   attr_reader :ordered_cards
 
-  RACK_MARKERS = %w(a b c d e f g h i)
+  RACK_MARKERS = %w(a b c d e f g h i j)
 
   def initialize
     @ordered_cards = []
@@ -24,6 +24,7 @@ class Rack
     nums == nums.sort
   end
 
+  # Is this needed anymore?
   def replace_card(place_indicator, new_card)
     replaced_card = get_card(place_indicator)
     set_card(place_indicator, new_card)
