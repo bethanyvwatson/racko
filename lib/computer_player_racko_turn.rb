@@ -10,19 +10,9 @@ class ComputerPlayerRackoTurn < RackoTurn
     DisplayManager.prepare_ingame_display
     show_state
     thinking(1)
-
-    @place_for_top_discarded = @current_player.find_useful_rack_placement(@discard_pile.cards.first.number)
-    
-    if useful_placement?(@place_for_top_discarded)
-      choose_discard
-    else
-      choose_new_card
-    end
-
+    choose_draw_or_discard
     thinking(2)
-
     show_state
-
     puts "#{@current_player.name} has drawn from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile."
   end
 
@@ -104,7 +94,23 @@ class ComputerPlayerRackoTurn < RackoTurn
     save_and_discard(placement_indicator)
   end
 
+  def choose_draw_or_discard
+    @place_for_top_discarded = -1# @current_player.find_useful_rack_placement(@discard_pile.cards.first.number)
+    
+    if useful_placement?(@place_for_top_discarded)
+      choose_discard
+    else
+      choose_new_card
+    end
+  end
+
   def useful_placement?(index)
     index >= 0
+  end
+
+  # used only for simulations
+  def test_take_turn(verbose = false)
+    choose_draw_or_discard
+    use_card
   end
 end

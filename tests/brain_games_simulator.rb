@@ -18,53 +18,26 @@ class BrainGamesSimulator
   end
 
   def run_game(game_num, debug = false)
-    deck = (1..60).to_a.shuffle
-    rack1 = deck.sample(10)
-    deck = deck - rack1
-    rack2 = deck.sample(10)
-    deck = deck - rack2
-    rack1_orig = rack1.to_s
-    rack2_orig = rack2.to_s
-    deck_orig = deck.to_s
-    discard = []
+    pm = PlayerManager.new
+    player1 = pm.new_computer_player
+    player2 = pm.new_computer_player
 
-    while rack1.sort != rack1 && rack2.sort != rack2 && @reshuffle_counts[game_num] <= RESHUFFLE_COUNT
-      @turn_counts[game_num] += 1
+    pm.init_current_player
+    dm = DecksManager.new
+    
+    while winning_player.nil?
+      pm.switch_players
 
-      if deck.length < 1
-        deck = discard.shuffle
-        discard = []
-        @reshuffle_counts[game_num] += 1
+      if @decks_manager.draw_pile.is_empty?
+        @decks_manager.reshuffle_discard_into_draw 
+        @decks_manager.let_players_shuffle_draw_pile
+        @decks_manager.discard_top_card
       end
 
-      newest_card = deck.shift
+      ComputerPlayerTurn.new(pm.current_player).take_turn
+      nums = pm.current_player.rack.ordered_cards.map(&:number)
 
-      #rack 1
-      i = @brain.index_to_replace(newest_card, rack1)
-
-      if i == -1
-        discard << newest_card
-      else
-        discard << rack1[i]
-        rack1[i] = newest_card
-      end
-
-      if deck.length < 1
-        deck = discard.shuffle
-        discard = []
-        @reshuffle_counts[game_num] += 1
-      end
-
-      #rack 2
-      newest_card = deck.shift
-      i2 = @brain.index_to_replace(newest_card, rack2)
-
-      if i2 == -1
-        discard << newest_card
-      else
-        discard << rack2[i]
-        rack2[i] = newest_card
-      end
+      winning_player = pm.current_player if nums == nums.sort
     end
 
     if debug

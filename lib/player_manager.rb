@@ -141,4 +141,9 @@ class PlayerManager
   def print_roster
     @players.each.with_index(1) { |p, i| puts "Player #{i}: #{p.name} #{'(cpu)' if p.is_a?(ComputerPlayer)}" }
   end
+
+  def test_init_players(count = 2)
+    count.times { |x| @players << new_computer_player }
+    init_current_player
+  end
 end
