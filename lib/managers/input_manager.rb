@@ -1,5 +1,5 @@
 class InputManager
-  require_relative "../rack.rb"
+  require_relative "../racks/rack"
   require_relative "player_manager"
   TEXT = YAML.load_file('text.yml')
 

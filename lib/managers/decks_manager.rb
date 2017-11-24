@@ -1,7 +1,6 @@
 class DecksManager
-  require_relative '../deck.rb'
-  require_relative '../racko_deck.rb'
-  require_relative '../card.rb'
+  require_relative '../decks/racko_deck'
+  require_relative '../cards/card'
 
   attr_reader :discard_pile, :draw_pile
 
