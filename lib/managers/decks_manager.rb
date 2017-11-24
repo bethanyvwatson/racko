@@ -1,7 +1,7 @@
 class DecksManager
-  require_relative '../lib/deck.rb'
-  require_relative '../lib/racko_deck.rb'
-  require_relative '../lib/card.rb'
+  require_relative '../deck.rb'
+  require_relative '../racko_deck.rb'
+  require_relative '../card.rb'
 
   attr_reader :discard_pile, :draw_pile
 
@@ -45,6 +45,7 @@ class DecksManager
   def reshuffle_discard_into_draw
     DisplayManager.prepare_pregame_display
     puts "The draw pile is empty! Let's shuffle the discard pile and make that the new draw pile."
+    sleep(3)
     @draw_pile = @discard_pile
     @discard_pile = Deck.new 
   end

@@ -1,6 +1,6 @@
-require_relative "../lib/player.rb"
-require_relative "../lib/computer_player.rb"
-require_relative "../lib/rack.rb"
+require_relative "../player.rb"
+require_relative "../computer_player.rb"
+require_relative "../rack.rb"
 
 class PlayerManager
   attr_reader :current_player, :players
