@@ -1,17 +1,9 @@
 class PlayRacko
   require 'yaml'
 
-  require_relative 'lib/managers/display_manager.rb'
-  require_relative 'lib/managers/input_manager.rb'
-  require_relative 'lib/players/player.rb'
-  require_relative 'lib/players/computer_player.rb'
-  require_relative 'lib/turns/computer_player_racko_turn.rb'
-  require_relative 'lib/turns/player_racko_turn.rb'
-  require_relative 'lib/players/computer_player_brain.rb'
-  require_relative 'lib/turns/racko_turn.rb'
-  require_relative 'lib/managers/player_manager.rb'
-  require_relative 'lib/managers/decks_manager.rb'
-  require_relative 'lib/managers/rules_manager.rb'
+  Dir[File.join(File.dirname(__FILE__), 'lib', '**', '*.rb')].each  do |file| 
+    require_relative file
+  end
 
   TEXT = YAML.load_file('text.yml')
   MAX_CARDS = 10

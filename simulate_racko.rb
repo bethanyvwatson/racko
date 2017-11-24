@@ -2,17 +2,9 @@ class SimulateRacko
 
   require 'yaml'
 
-  require_relative 'lib/display_manager.rb'
-  require_relative 'lib/input_manager.rb'
-  require_relative 'lib/player.rb'
-  require_relative 'lib/computer_player.rb'
-  require_relative 'lib/computer_player_racko_turn.rb'
-  require_relative 'lib/player_racko_turn.rb'
-  require_relative 'lib/computer_player_brain.rb'
-  require_relative 'lib/racko_turn.rb'
-  require_relative 'lib/player_manager.rb'
-  require_relative 'lib/decks_manager.rb'
-  require_relative 'lib/rules_manager.rb'
+  Dir[File.join(File.dirname(__FILE__), 'lib', '**', '*.rb')].each  do |file| 
+    require_relative file
+  end
 
   TEXT = YAML.load_file('text.yml')
   MAX_CARDS = 10
