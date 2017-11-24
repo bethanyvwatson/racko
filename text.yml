@@ -2,15 +2,15 @@ exit: 'Bye bye! Thanks for playing Ruby Racko.'
 intro: 'THIS IS RUBY RACKO!!!'
 rules: 
   "
-  In Racko, each player has 9 numbered cards placed in a 'rack' that secures their order.\n
+  In Racko, each player has 10 numbered cards placed in a 'rack' that secures their order.\n
   \tExample Rack:\n
-  \t43 / 01 / 13 / 22 / 51 / 23 / 05 / 17 / 60\n
-  \t a    b    c    d    e    f    g    h    i\n
+  \t43 / 01 / 13 / 22 / 51 / 23 / 05 / 17 / 56 / 60\n
+  \t a    b    c    d    e    f    g    h    i    j\n
   \n
-  The goal is to be the first player to order your cards from LOW to HIGH (from a to i).\n
+  The goal is to be the first player to order your cards from LOW to HIGH (from a to j).\n
   \tWinning Rack:\n
-  \t05 / 10 / 13 / 22 / 28 / 31 / 42 / 57 / 60\n
-  \t a    b    c    d    e    f    g    h    i\n
+  \t05 / 10 / 13 / 22 / 28 / 31 / 42 / 47 / 59 / 60\n
+  \t a    b    c    d    e    f    g    h    i   j\n
   \n
   To accomplish this, players draw one new card per turn from the Draw Pile or Discard Pile.\n 
   Players have the option to exchange this card with one in their rack, or discard it.\n
@@ -20,8 +20,8 @@ rules:
   \tDraw Pile: ??          Discard Pile: 39\n
   \t--------------------------------------------------\n
   \tPlayer 1's Turn\n
-  \t05 / 10 / 13 / 22 / 28 / 08 / 42 / 57 / 60\n
-  \t a    b    c    d    e    f    g    h    i\n
+  \t05 / 10 / 13 / 22 / 28 / 08 / 42 / 47 / 59 / 60\n
+  \t a    b    c    d    e    f    g    h    i    j\n
   \n
   With the above example, Player 1 would want to draw the 39 from the Discard Pile,\n
   because placing that card in spot 'f' would give them a winning rack!

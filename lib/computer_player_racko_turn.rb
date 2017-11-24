@@ -57,7 +57,13 @@ class ComputerPlayerRackoTurn < RackoTurn
 
     show_rack(true)
 
-    puts "#{@current_player.name} drew #{@selected_card.to_s} from the #{@drew_from_discard ? 'Discard' : 'Draw'} Pile." if @selected_card
+    if @selected_card
+      draw_string = @drew_from_discard ? 
+        "#{@current_player.name} drew #{@selected_card.to_s} from the Discard Pile." :
+        "#{@current_player.name} drew a card from the Draw Pile."
+      puts draw_string
+    end
+
     puts "They discarded #{@card_to_discard.to_s}." if @card_to_discard
   end
 
