@@ -1,7 +1,11 @@
 Milton-Bradley owns "Racko" in real life. This is an imitation. 
 
-Playing Racko simply made me want to code it! The UI is simple, command-line based because I didn't want to get bogged down in design. I look forward to the challenge of writing beatable computer players.
+Although still a work in progress, you can play "Ruby Racko" right now. Play against up to three computer players, or challenge your friends!
 
-Learning Focus:
-1) Pure Ruby! This is the first significant project I've done in pure Ruby, without Rails or any other framework.
-2) Iterative Development! Sometimes I have a tendency to want to do everything RIGHT NOW. With this project, I'm staying disciplined and trying to really compartmentalize each new functionality.
+"Ruby Racko" is a command-line version of Milton-Bradley's "Racko". Each player starts with a rack of 10 numbered cards in random order; the rack exists to preserve the order of the cards. Taking turns, players race to sort their rack of cards from low-to-high by drawing a new card and exchanging it (or not!) with a card in their rack. The first player to have a fully sorted rack wins!
+
+Future work for "Ruby Racko" includes:
+- Improved logic for computer players.
+- Varying difficulty levels for computer players.
+- Introducing the special "prime number" cards that make "Racko" actually challenging.
+
