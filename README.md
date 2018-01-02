@@ -1,4 +1,4 @@
-#Ruby Racko
+# Ruby Racko
 Race to sort your rack of cards by number.
 
 
@@ -34,9 +34,9 @@ Before the game begins, the Game Table appears empty, like so:
  	--------------------------------------------------
 ```
 
-Think of the space between these vertical lines as the "shared" table space between all players. 
+Think of the space between these horizontal lines as the "shared" table space between all players. 
 
-During gameplay, players will see the Draw Pile and Discard Pile displayed between these vertical lines:
+Players will see the Draw Pile and Discard Pile displayed between these horizontal lines when gameplay starts:
 
 ```
 	--------------------------------------------------
@@ -60,7 +60,7 @@ During a player's turn, the Game Table expands to include information about the 
  The letters below each number describe that card's location in the rack. In this example, the number `46` is at location `e`. Players use this location information to indicate which card they wish to replace during their turn.
  
  ### The I/O Section
- Players can always find the I/O Section at the bottom of the Game Display. The I/O section consists of a prompt or question, and the options users can select in response. Each possible response to a prompt corresponds to one or more valid inputs, which are displayed in parenthesis next to each possible response. 
+ Players can always find the I/O Section at the bottom of the Game Display. The I/O section consists of a prompt or question, and the options users can select in response. Each possible response corresponds to one or more valid keyboard inputs. Valid inputs are displayed in parenthesis next to each possible response. 
  ```
  Before we start, do you want to read the rules for Ruby Racko?
 	Read Rules (1/y/yes)
@@ -69,7 +69,7 @@ During a player's turn, the Game Table expands to include information about the 
 ``` 
 Players must indicate their response by typing one of the corresponding valid inputs into the terminal and pressing `enter` or `return`.
 
-Given the above prompt, for example, a player could skip the rules by typing `0` and `enter`.
+Given the above prompt, for example, a player could skip the rules by typing `n` and pressing `enter`.
 
 ### Putting it All Together
 Here is an example of what the entire Game Display looks like in the middle of a player's turn:
